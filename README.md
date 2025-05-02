@@ -1,70 +1,110 @@
-# Getting Started with Create React App
+# Aplicación de Alerta de Crimen 🚨
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> **"leo me la lacta"**
 
-## Available Scripts
+Una plataforma web de alerta comunitaria que permite a los usuarios informar y visualizar incidentes delictivos en su área en tiempo real. Inspirada en Citizen ([https://citizen.com](https://citizen.com)), esta aplicación busca fortalecer la seguridad vecinal mediante la colaboración activa de todos.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🔍 Descripción
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Con esta **Aplicación de Alerta de Crimen**, la comunidad puede:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+* **Reportar** delitos y situaciones de riesgo con geolocalización.
+* **Visualizar** en un mapa interactivo los incidentes reportados.
+* **Recibir notificaciones** instantáneas de sucesos cercanos.
+* **Comentar y confirmar** la veracidad de los reportes para mayor confiabilidad.
 
-### `npm test`
+Al compartir información en tiempo real, los usuarios podrán tomar decisiones informadas y mantener la seguridad de su vecindario.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## 🚀 Características Principales
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. **Registro y autenticación** de usuarios con permisos por rol.
+2. **Dashboard interactivo** con mapa y filtros por tipo de incidente.
+3. **Notificaciones push** y correo electrónico para alertas urgentes.
+4. **Sección de estadísticas** con gráficos de tendencias delictivas.
+5. **Sistema de validación** de reportes por la comunidad.
+6. **Perfil de usuario** con historial de reportes y contribuciones.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🛠️ Instalación y Configuración
 
-### `npm run eject`
+1. **Clona el repositorio**:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+   ```bash
+   git clone https://github.com/tu-usuario/urbat.git
+   cd urbat
+   ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+2. **Instala dependencias**:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+   ```bash
+   npm install       # Frontend (React, D3.js)
+   pip install -r requirements.txt  # Backend (Python/Django u otro framework)
+   ```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+3. **Configura variables de entorno** (.env):
 
-## Learn More
+   ```env
+   DATABASE_URL=postgres://user:pass@host:port/dbname
+   SECRET_KEY=tu_clave_secreta
+   PUSH_SERVICE_KEY=tu_api_key_de_push
+   ```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+4. **Ejecuta la aplicación**:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+   ```bash
+   # Levanta el backend
+   python manage.py migrate
+   python manage.py runserver
 
-### Code Splitting
+   # Levanta el frontend
+   npm start
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+5. **Accede** a `http://localhost:3000` y empieza a reportar.
 
-### Analyzing the Bundle Size
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## 🎯 Uso
 
-### Making a Progressive Web App
+1. Crea una cuenta o inicia sesión.
+2. Desde el mapa, haz clic en **"Reportar Incidente"**.
+3. Completa el formulario con detalles (tipo, descripción, ubicación).
+4. Envía el reporte y espera confirmaciones de otros usuarios.
+5. Recibe alertas automáticas según tu área de interés.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+---
 
-### Advanced Configuration
+## 📈 Tecnologías
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+* **Frontend**: React, D3.js, Leaflet
+* **Backend**: Django / Node.js (Opcional según tu stack)
+* **Base de datos**: PostgreSQL
+* **Notificaciones**: Firebase Cloud Messaging / Web Push
+* **Autenticación**: JWT / OAuth
 
-### Deployment
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 🤝 Contribuciones
 
-### `npm run build` fails to minify
+¡Se agradecen contribuciones! Para colaborar:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. Haz un fork de este repositorio.
+2. Crea una nueva rama: `git checkout -b feature/nombre-feature`
+3. Realiza tus cambios y haz commit: `git commit -m "Añade nueva feature"`
+4. Envía tu rama al remoto: `git push origin feature/nombre-feature`
+5. Abre un Pull Request y describe tus cambios.
+
+---
+
+## 📄 Licencia
+
+Este proyecto está bajo la licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.
+
+---
+
+> Hecho con actitud **premium** y un toque irreverente. ¡A proteger al barrio! 🚀
