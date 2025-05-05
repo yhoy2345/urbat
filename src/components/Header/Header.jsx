@@ -9,7 +9,6 @@ import {
   faPaperPlane,
   faUserLock,
   faUserPlus,
-  faBrain
 } from '@fortawesome/free-solid-svg-icons';
 
 import './Header.css';
@@ -82,8 +81,9 @@ export default function Header() {
             <a href="/perfil.html" className="urbat-logo" aria-label="Inicio - UR BAT">
               <span className="urbat-logo__icon-container">
                 <span className="urbat-logo__icon">
-                  <FontAwesomeIcon 
-                    icon={faBrain} 
+                  <img 
+                    src="/images/logito.png" 
+                    alt="Logo" 
                     className="urbat-logo__brain-icon" 
                   />
                 </span>

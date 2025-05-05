@@ -85,8 +85,11 @@
     border-radius: 20px; /* opcional, bordes redondeados */
     padding: 10px 20px; /* opcional, separación interna */
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* opcional, sombrita */
-
-    
+    display: flex;
+    justify-content: center; /* Centra el contenido horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    transition: all 0.3s ease; /* Suaviza los cambios */
+    box-sizing: border-box;
 }
 
 .navbar-container {
@@ -97,6 +100,7 @@
     justify-content: space-between;
     align-items: center;
     z-index: 10;
+    max-width: 1600px;
 
 }
 
@@ -201,7 +205,6 @@
     border-radius: 20px;
     overflow: hidden;
     opacity: 0;
-    transform: translateY(20px);
     animation: urbat-logo-entrance 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     transition: all 0.4s cubic-bezier(0.65, 0, 0.35, 1);
     background: rgba(15, 23, 42, 0.25);
@@ -210,6 +213,12 @@
     border: 1px solid rgba(255, 215, 0, 0.15);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     z-index: 1;
+    transform: none !important;
+    scale: 1 !important;
+    flex-shrink: 0 !important; /* Evita compresión en flexbox */
+    width: max-content !important; /* Ancho según contenido */
+    padding: 10px 16px !important;
+
 }
   
   /* Icon Container */
@@ -218,8 +227,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 80px;
+    width: 32px;
+    height: 32px;
     min-width: 40px;
   }
   
@@ -254,8 +263,8 @@
   /* Asegura tamaño consistente */
   .urbat-logo__brain-icon {
     display: block;
-    width: 1.5em !important;
-    height: 1.5em !important;
+    width: 1.8em !important;
+    height: 1.8em !important;
     filter: drop-shadow(0 0 2px rgba(255, 215, 0, 0.7));
   }
   
@@ -539,6 +548,7 @@ UR BAT NAV
 .urbat-nav__horizontal {
 display: flex;
 gap: 2px;
+font-size: 1rem;
 padding: 8px;
 margin: 0;
 list-style: none;
@@ -736,6 +746,7 @@ height: 3px;
     border-radius: 12px;
     border: 1px solid rgba(255, 215, 0, 0.1);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    margin-left: auto;
 }
 
 .urbat-btn {
@@ -993,7 +1004,7 @@ height: 3px;
     position: fixed;
     top: 0;
     right: -100%;
-    width: 75%;
+    width: 50%;
     height: 100%;
     background: var(--color-dark);
     backdrop-filter: blur(10px);
@@ -1002,20 +1013,24 @@ height: 3px;
     padding: 2rem;
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
   }
   
   .nav-mobile-menu--visible {
     right: 0;
+    opacity: 1;
+  visibility: visible;
   }
   
   .nav-mobile-list {
     list-style: none;
     padding: 0;
     margin: 0;
+    text-align: left;
   }
   
   .nav-mobile-item {
-    margin: 1rem 0;
+    margin: 20px 0;
   }
   
   .nav-mobile-link {
@@ -1025,11 +1040,14 @@ height: 3px;
     font-size: 1.2rem;
     text-decoration: none;
     transition: color 0.3s ease;
+    gap: 12px;
+    justify-content: left;
   }
   
   .nav-mobile-icon {
     color: var(--color-highlight);
     margin-right: 0.5rem;
+    font-size: 1.4em;
   }
   
   .nav-mobile-text {
@@ -1045,16 +1063,44 @@ height: 3px;
     font-size: 0.8rem;
   }
   
-  /* Responsive Behavior */
-  @media (max-width: 768px) {
-    .nav-hamburger-btn {
-      display: inline-flex;
-    }
-    
-    .nav-desktop {
-      display: none;
-    }
+/* ---------------------------------- */
+/* 🔄 CAMBIO EN 1260px */
+/* ---------------------------------- */
+@media (max-width: 1260px) {
+  /* Oculta el menú horizontal */
+  .urbat-nav__horizontal {
+    display: none !important;
   }
+  
+  /* Muestra el botón hamburguesa */
+  .nav-hamburger-btn {
+    display: block;
+  }
+  
+  /* Ajustes adicionales para el navbar */
+  .navbar-content {
+    justify-content: space-between; /* Logo a la izquierda, hamburguesa a la derecha */
+  }
+  
+  /* Reduce más los botones si es necesario */
+  .urbat-buttons-container {
+    margin-left: auto; /* Empuja los botones a la derecha */
+    margin-right: 15px; /* Espacio antes del hamburguesa */
+  }
+}
+
+/* ---------------------------------- */
+/* 📱 AJUSTES PARA MÓVIL (≤ 768px) */
+/* ---------------------------------- */
+@media (max-width: 768px) {
+  .nav-mobile-link {
+    font-size: 1rem;
+  }
+  
+  .nav-hamburger-box {
+    width: 24px;
+  }
+}
 
 /*═══════════════════════════════════════════════╗
   ✨  RESPONSIVE DESIGN — ICON ONLY ≤ 1800px   ✨
@@ -1064,6 +1110,312 @@ height: 3px;
     display: none;
   }
 }
+/*═══════════════════════════════════════════════╗
+  ✨  RESPONSIVE DESIGN  ≤ 1650px   ✨
+═══════════════════════════════════════════════*/
 
 
+/* 📱 Media Queries para RESPONSIVE */
+/* Escalado SUAVE (1600px → 1500px) */
+@media (max-width: 1650px) {
+  .urbat-buttons-container {
+    gap: 15px;
+    transform: scale(0.95); /* Reducción del 5% */
+    transform-origin: left center;
+  }
+  .urbat-btn {
+    padding: 12px 24px;
+    font-size: 16px;
+  }
+  .urbat-btn__icon svg {
+    width: 16px;
+    height: 16px;
+  }
+}
 
+/* Escalado NOTORIO (< 1500px) */
+@media (max-width: 1500px) {
+  .urbat-buttons-container {
+    gap: 10px;
+    transform: scale(0.85); /* Reducción del 15% */
+  }
+  .urbat-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+  .urbat-btn__icon svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+
+@media (max-width: 1650px) {
+  .navbar {
+      width: 90%;
+      height: auto; /* Altura flexible */
+      min-height: 80px; /* Altura mínima */
+      padding: 15px 20px; /* Más padding para móviles */
+  }
+
+  .navbar-content {
+      flex-direction: column; /* Apila logo y botones */
+      gap: 15px;
+  }
+}
+
+/* Pantallas medianas (≤ 1200px) */
+@media (max-width: 1200px) {
+  .navbar {
+      width: 95%;
+      top: 20px; /* Más cerca del borde superior */
+  }
+}
+
+/* Tablets (≤ 992px) */
+@media (max-width: 992px) {
+  .navbar {
+      border-radius: 15px;
+      backdrop-filter: blur(8px);
+  }
+}
+
+/* Móviles (≤ 768px) */
+@media (max-width: 768px) {
+  .navbar {
+      width: 98%;
+      top: 10px;
+      min-height: 70px;
+      padding: 10px 15px;
+  }
+}
+
+/* Móviles pequeños (≤ 576px) */
+@media (max-width: 576px) {
+  .navbar {
+      border-radius: 12px;
+  }
+}
+/*═══════════════════════════════════════════════╗
+  ✨  RESPONSIVE DESIGN  ≤ 1500px   ✨
+═══════════════════════════════════════════════*/
+@media (max-width: 1500px) {
+  .urbat-logo {
+      font-size: 1.2rem !important; /* Texto más pequeño */
+      padding: 8px 12px !important;
+  }
+  
+  .urbat-logo__icon-container {
+      width: 28px !important; /* Icono más compacto */
+      height: 28px !important;
+  }
+  
+  .urbat-logo__text {
+      transform: scale(0.9); /* Opcional: suaviza reducción */
+  }
+}
+
+/* Móviles (≤ 768px) */
+@media (max-width: 768px) {
+  .urbat-logo {
+      font-size: 1rem !important;
+      padding: 6px 10px !important;
+  }
+  
+  .urbat-logo__icon-container {
+      width: 24px !important;
+      height: 24px !important;
+  }
+}
+
+/* Ajustes para ≤ 1500px */
+@media (max-width: 1500px) {
+  .urbat-nav__horizontal {
+      gap: 12px !important; /* Menor espacio entre ítems */
+  }
+  
+  .urbat-nav__link {
+      padding: 8px 12px !important;
+  }
+  
+  .urbat-nav__icon {
+      font-size: 1em !important; /* Íconos más pequeños */
+  }
+  
+  .urbat-nav__text {
+      font-size: 0.85rem !important;
+  }
+}
+
+/* Móviles (≤ 768px) - Menú ultracompacto */
+@media (max-width: 768px) {
+  .urbat-nav__horizontal {
+      gap: 8px !important;
+  }
+  
+  .urbat-nav__link {
+      padding: 6px 8px !important;
+  }
+  
+  .urbat-nav__text {
+      display: none !important; /* Oculta texto en móviles */
+  }
+  
+  .urbat-nav__icon {
+      font-size: 1.1em !important; /* Íconos ligeramente más grandes para táctil */
+  }
+}
+/*═══════════════════════════════════════════════╗
+  ✨  RESPONSIVE DESIGN  ≤ 1350px   ✨
+═══════════════════════════════════════════════*/
+@media (max-width: 1350px) {
+  /* 🔹 LOGO (Más pequeño) */
+  .urbat-logo {
+      font-size: 1.1rem !important;
+      padding: 6px 10px !important;
+  }
+  .urbat-logo__icon-container {
+      width: 24px !important;
+      height: 24px !important;
+  }
+  .urbat-logo__text {
+      transform: scale(0.85);
+  }
+
+  /* 🔹 MENÚ HORIZONTAL (Compacto) */
+  .urbat-nav__horizontal {
+      gap: 10px !important;
+  }
+  .urbat-nav__link {
+      padding: 6px 10px !important;
+      font-size: 0.8rem !important;
+  }
+  .urbat-nav__icon {
+      font-size: 0.9em !important;
+  }
+  .urbat-nav__badge {
+      transform: scale(0.8);
+  }
+
+  /* 🔹 BOTONES (Reducción proporcional) */
+  .urbat-buttons-container {
+      gap: 10px !important;
+  }
+  .urbat-btn {
+      padding: 8px 14px !important;
+      font-size: 0.85rem !important;
+  }
+  .urbat-btn__icon svg {
+      width: 14px !important;
+      height: 14px !important;
+  }
+}
+
+/* ---------------------------------- */
+/* 📱 AJUSTES PARA MÓVIL (≤ 768px) */
+/* ---------------------------------- */
+@media (max-width: 768px) {
+  .navbar {
+      width: 95%;
+      top: 15px;
+      padding: 8px 12px;
+  }
+
+  /* Logo: Versión mini */
+  .urbat-logo__text-container {
+      display: none !important; /* Oculta texto */
+  }
+  .urbat-logo {
+      padding: 5px 8px !important;
+  }
+
+  /* Menú: Solo íconos */
+  .urbat-nav__text {
+      display: none !important;
+  }
+  .urbat-nav__link {
+      padding: 8px !important; /* Cuadrados perfectos */
+  }
+
+  /* Botones: Más compactos */
+  .urbat-btn__text {
+      font-size: 0.75rem !important;
+  }
+}
+/*═══════════════════════════════════════════════╗
+  ✨  RESPONSIVE DESIGN  ≤ 600px   ✨
+═══════════════════════════════════════════════*/
+@media (max-width: 600px) {
+  .urbat-buttons-container {
+    gap: 8px; /* Reduce espacio entre botones */
+  }
+  
+  .urbat-btn {
+    width: 40px !important;
+    min-width: 40px !important;
+    padding: 0 !important;
+  }
+  
+  .urbat-btn__text {
+    display: none !important; /* Oculta texto */
+  }
+  
+  .urbat-btn__icon {
+    margin: 0 !important;
+    font-size: 1rem !important;
+  }
+  
+  .nav-hamburger-btn {
+    margin-left: -45px !important;
+  }
+}
+/*═══════════════════════════════════════════════╗
+  ✨  RESPONSIVE DESIGN  ≤ 450px   ✨
+═══════════════════════════════════════════════*/
+@media (max-width: 450px) {
+  .nav-mobile-menu {
+    padding: 4rem 1rem 1rem; /* Reduce padding */
+  }
+
+  .nav-mobile-list {
+    gap: 0.5rem; /* Menor espacio entre ítems */
+  }
+
+  .nav-mobile-item {
+    margin: 0.5rem 0; /* Reduce margen vertical */
+  }
+
+  .nav-mobile-link {
+    padding: 0.6rem 0.8rem; /* Más compacto */
+    font-size: 0.95rem; /* Texto más pequeño */
+    border-radius: 6px; /* Bordes menos redondeados */
+  }
+
+  .nav-mobile-icon {
+    font-size: 1rem !important; /* Íconos más pequeños */
+    min-width: 1.4rem; /* Espacio reducido */
+  }
+
+  .nav-mobile-badge {
+    font-size: 0.6rem !important;
+    padding: 0.15rem 0.4rem !important;
+    margin-left: 0.3rem !important;
+  }
+
+  /* Efecto hover ajustado */
+  .nav-mobile-link:hover {
+    transform: translateX(3px) !important; /* Movimiento más sutil */
+  }
+}
+@media (max-width: 500px) {
+  .nav-mobile-badge {
+    transform: scale(0.8);
+    margin-left: 0.2rem !important;
+  }
+}
+
+@media (max-width: 450px) {
+  .nav-mobile-badge {
+    display: none !important;
+  }
+}
