@@ -1,11 +1,11 @@
 .inicio-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .inicio-container h1 {
-    color: #333;
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-  }
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.inicio-container h1 {
+  color: #333;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}

@@ -1,0 +1,1069 @@
+
+/* ===========================
+   Header
+=========================== */
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.premium-header {
+    position: relative;
+    min-height: 100vh;
+    padding-top: 30px;
+    background: var(--darker);
+    overflow: hidden;
+}
+
+.particles-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.glass-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        135deg, 
+        rgba(15, 23, 42, 0.15) 0%, 
+        rgba(2, 6, 23, 0.2) 100%
+    );
+    backdrop-filter: blur(4px) saturate(200%);
+    -webkit-backdrop-filter: blur(2px) saturate(180%);
+    z-index: 2;
+    box-shadow: inset 0 0 60px rgba(2, 6, 23, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    mix-blend-mode: overlay;
+}
+
+.perfil-header {
+    position: relative;
+    min-height: 100vh;
+    background: var(--darker);
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 1;
+    padding-top: 30px; 
+}
+
+.header-container {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+/* ===========================
+   Navbar
+=========================== */
+.navbar {
+    position: fixed;
+    top: 30px; /* 30px del tope */
+    left: 50%;
+    transform: translateX(-50%); /* centrado */
+    width: 85%;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.4); /* si quieres fondo */
+    backdrop-filter: blur(10px); /* opcional, glassmorphism */
+    border-radius: 20px; /* opcional, bordes redondeados */
+    padding: 10px 20px; /* opcional, separación interna */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* opcional, sombrita */
+
+    
+}
+
+.navbar-container {
+    position: relative;
+    width: 100%;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+
+}
+
+.navbar-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--glass);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--glass-border);
+    z-index: -1;
+    border-radius: 12px;
+}
+
+.navbar-highlight {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 99.5%;
+    height: 3px; 
+    background: linear-gradient(
+        90deg, 
+        rgba(var(--primary-dark-rgb), 0) 0%, 
+        var(--primary-dark) 25%, 
+        var(--secondary) 50%, 
+        var(--primary-light) 75%, 
+        rgba(var(--primary-light-rgb), 0) 100%
+    );
+    border-radius: 999px;
+    opacity: 0.9;
+    z-index: 1;
+    animation: gradient-flow 8s ease infinite;
+    transition: all 0.5s var(--ease-out-quint);
+    overflow: hidden;
+}
+
+/* Efecto sutil de onda luminosa */
+.navbar-highlight::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -20%;
+    width: 20%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.15),
+        transparent
+    );
+    animation: wave 6s linear infinite;
+    transform: skewX(-20deg);
+}
+
+/* Animaciones mejoradas */
+@keyframes gradient-flow {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+@keyframes wave {
+    0% {
+        left: -20%;
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        left: 120%;
+        opacity: 0.8;
+    }
+}
+
+/* =========================================
+   UR BAT  Logo 
+   ========================================= */
+
+/* Base Logo Container */
+.urbat-logo {
+    --urbat-logo-gold: linear-gradient(135deg, #FFD700 0%, #FFC600 50%, #FFA500 100%);
+    --urbat-logo-silver: linear-gradient(135deg, #E0E0E0 0%, #C0C0C0 50%, #A0A0A0 100%);
+    --urbat-glow-intensity: 0.6;
+    
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--light);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-decoration: none;
+    position: relative;
+    padding: 10px 16px;
+    border-radius: 20px;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: urbat-logo-entrance 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    transition: all 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+    background: rgba(15, 23, 42, 0.25);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 215, 0, 0.15);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+}
+  
+  /* Icon Container */
+  .urbat-logo__icon-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 80px;
+    min-width: 40px;
+  }
+  
+/* Variables de color mejoradas */
+:root {
+    --logo-gold: #FFD700; /* Amarillo dorado sólido */
+    --logo-gold-light: #FFEC8B; /* Versión más clara */
+    --logo-glow: rgba(255, 215, 0, 0.4);
+    --particle-color: rgba(255, 215, 0, 0.6);
+  }
+  
+  /* Contenedor principal */
+  .urbat-logo__icon-container {
+    position: relative;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Icono principal - AHORA MÁS VISIBLE */
+  .urbat-logo__icon {
+    position: relative;
+    z-index: 4;
+    font-size: 2rem;
+    color: var(--logo-gold); /* Color amarillo sólido */
+    text-shadow: 0 0 8px var(--logo-glow);
+    transition: all 0.3s ease;
+  }
+  
+  /* Asegura tamaño consistente */
+  .urbat-logo__brain-icon {
+    display: block;
+    width: 1.5em !important;
+    height: 1.5em !important;
+    filter: drop-shadow(0 0 2px rgba(255, 215, 0, 0.7));
+  }
+  
+  /* Efecto de resplandor (más sutil) */
+  .urbat-logo__icon-glow {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, 
+      var(--logo-gold-light) 0%, 
+      transparent 70%);
+    border-radius: 50%;
+    opacity: 0.4;
+    filter: blur(8px);
+    z-index: 1;
+    animation: pulse-glow 3s infinite alternate;
+  }
+  
+  /* Partículas más discretas */
+  .urbat-logo__icon-particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, 
+      var(--particle-color) 0%, 
+      transparent 70%);
+    opacity: 0;
+    z-index: 2;
+    transition: opacity 0.4s ease;
+  }
+  
+  /* Efecto de pulso mejorado */
+  .urbat-logo__pulse-effect {
+    position: absolute;
+    width: 120%;
+    height: 120%;
+    border: 1px solid var(--logo-gold);
+    border-radius: 50%;
+    opacity: 0;
+    z-index: 3;
+    animation: pulse-ring 3s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+  }
+  
+  /* Animaciones */
+  @keyframes pulse-glow {
+    0% { transform: scale(0.9); opacity: 0.3; }
+    100% { transform: scale(1.1); opacity: 0.6; }
+  }
+  
+  @keyframes pulse-ring {
+    0% { transform: scale(0.8); opacity: 0.4; }
+    80%, 100% { transform: scale(1.2); opacity: 0; }
+  }
+  
+  /* Efecto hover - mantiene visibilidad */
+  .urbat-logo__icon-container:hover {
+    .urbat-logo__icon {
+      transform: scale(1.1);
+      color: var(--logo-gold-light);
+      filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.9));
+    }
+    
+    .urbat-logo__icon-particles {
+      opacity: 0.4;
+    }
+  }
+  
+  /* Text Container */
+  .urbat-logo__text-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    overflow: hidden;
+  }
+  
+  /* Main Text */
+  .urbat-logo__text {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    width: 0;
+    overflow: hidden;
+    animation: urbat-typing 1.8s 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  
+  /* Highlighted "UR" Text */
+  .urbat-logo__highlight {
+    background: var(--urbat-logo-gold);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+    position: relative;
+    text-shadow: 
+      0 0 10px rgba(255, 215, 0, 0.4),
+      0 0 3px rgba(0, 0, 0, 0.3);
+    animation: urbat-shine 4s ease-in-out infinite alternate;
+  }
+  
+  /* "BAT" Text */
+  .urbat-logo__bat-text {
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+    position: relative;
+  }
+  
+  
+  /* Hover Effect Layer */
+  .urbat-logo__hover-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--urbat-logo-gold);
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 0.6s ease;
+    mix-blend-mode: overlay;
+  }
+  
+  /* Active Glow Effect */
+  .urbat-logo__active-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    z-index: -1;
+    pointer-events: none;
+  }
+  
+  /* ======================
+     Animations
+     ====================== */
+  
+  @keyframes urbat-logo-entrance {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes urbat-typing {
+    0% { width: 0; }
+    50% { width: 100%; }
+    100% { width: 100%; }
+  }
+  
+  @keyframes urbat-shine {
+    0% { 
+      background-position: 0% 50%;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+    }
+    100% { 
+      background-position: 100% 50%;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+    }
+  }
+  
+  @keyframes urbat-pulse-appear {
+    0% { opacity: 0; transform: scale(0.5); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  
+  @keyframes urbat-pulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 200, 83, 0.7); }
+    70% { transform: scale(1.2); box-shadow: 0 0 0 12px rgba(0, 200, 83, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 200, 83, 0); }
+  }
+  
+  @keyframes urbat-particle-float {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(-20px) rotate(360deg); }
+  }
+  
+  /* ======================
+     Hover Effects
+     ====================== */
+  
+  .urbat-logo:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 215, 0, 0.3);
+  }
+  
+  .urbat-logo:hover .urbat-logo__icon {
+    transform: rotate(20deg) scale(1.15);
+    animation: urbat-icon-float 3s ease-in-out infinite;
+  }
+  
+  .urbat-logo:hover .urbat-logo__icon-glow {
+    opacity: 0.4;
+    transform: scale(1.3);
+    filter: blur(12px);
+  }
+  
+  .urbat-logo:hover .urbat-logo__icon-particles {
+    opacity: 0.3;
+  }
+  
+  .urbat-logo:hover .urbat-logo__hover-effect {
+    opacity: 0.15;
+  }
+  
+  .urbat-logo:hover .urbat-logo__active-glow {
+    opacity: 0.3;
+  }
+  
+  .urbat-logo:hover .urbat-logo__status-indicator {
+    transform: scale(1.4);
+  }
+  
+  .urbat-logo:hover .urbat-logo__bat-text {
+    text-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+  }
+  
+  @keyframes urbat-icon-float {
+    0%, 100% { transform: rotate(20deg) scale(1.15) translateY(0); }
+    50% { transform: rotate(25deg) scale(1.2) translateY(-5px); }
+  }
+
+/* ===============================
+   Navegación Links
+================================== */
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-links-container {
+    display: flex;
+}
+
+.nav-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-item {
+    position: relative;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.6s var(--ease-out-quint) forwards;
+}
+
+.nav-item:nth-child(1) { animation-delay: 0.1s; }
+.nav-item:nth-child(2) { animation-delay: 0.2s; }
+.nav-item:nth-child(3) { animation-delay: 0.3s; }
+.nav-item:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+
+
+
+/* ========================
+UR BAT NAV
+======================== */
+.urbat-nav__horizontal {
+display: flex;
+gap: 2px;
+padding: 8px;
+margin: 0;
+list-style: none;
+background: rgba(10, 15, 30, 0.8);
+backdrop-filter: blur(16px);
+border-radius: 50px;
+border: 1px solid rgba(255, 215, 0, 0.15);
+box-shadow: 
+    0 10px 40px rgba(0, 0, 0, 0.4),
+    inset 0 0 20px rgba(255, 215, 0, 0.05);
+}
+
+.urbat-nav__item {
+position: relative;
+}
+
+.urbat-nav__link {
+--gold: #FFD700;
+--diamond: rgba(255, 255, 255, 0.8);
+
+display: flex;
+align-items: center;
+padding: 12px 24px;
+color: white;
+text-decoration: none;
+font-weight: 500;
+font-size: 0.95rem;
+letter-spacing: 0.5px;
+overflow: hidden;
+transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1.5);
+position: relative;
+}
+
+/* Efecto diamante premium */
+.urbat-nav__diamond-effect {
+position: absolute;
+width: 12px;
+height: 12px;
+background: var(--diamond);
+transform: rotate(45deg) scale(0);
+opacity: 0;
+transition: all 0.6s ease;
+filter: blur(1px);
+z-index: 2;
+}
+
+/* =========================================
+regla para ocultar cuando hay badge
+========================================= */
+.urbat-nav__text-wrapper:has(.urbat-nav__badge) ~ .urbat-nav__diamond-effect {
+display: none !important;
+}
+
+/* Alternativa si el selector :has no es compatible */
+.urbat-nav__badge ~ .urbat-nav__diamond-effect,
+.urbat-nav__badge + .urbat-nav__diamond-effect {
+display: none !important;
+}
+
+
+/* Icono con efecto lujo */
+.urbat-nav__icon-wrapper {
+position: relative;
+margin-right: 12px;
+width: 24px;
+height: 24px;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.urbat-nav__icon {
+font-size: 1rem;
+color: var(--gold);
+z-index: 2;
+transition: all 0.4s ease;
+}
+
+.urbat-nav__icon-aura {
+position: absolute;
+width: 100%;
+height: 100%;
+background: var(--gold);
+border-radius: 50%;
+filter: blur(6px);
+opacity: 0;
+transition: all 0.5s ease;
+}
+
+/* Barra dorada animada */
+.urbat-nav__gold-bar {
+position: absolute;
+bottom: 0;
+left: 50%;
+width: 0;
+height: 2px;
+background: var(--gold);
+transform: translateX(-50%);
+transition: all 0.4s ease;
+}
+
+/* ========================
+   BADGE PREMIUM CENTRADO
+   ======================== */
+   .urbat-nav__icon-wrapper {
+    position: relative;
+    margin-right: 12px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .urbat-nav__badge {
+    position: absolute;
+    top: 1px;  /* Ajuste vertical */
+    right: 8px; /* Ajuste horizontal */
+    font-size: 0.6rem; /* Más pequeño */
+    padding: 2px 5px;
+    background: #FFD700;
+    color: #000;
+    border-radius: 50%;
+    font-weight: 900;
+    min-width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.8);
+    z-index: 3;
+    line-height: 1;
+  }
+   
+
+
+/* ================
+    EFECTOS HOVER
+    ================ */
+.urbat-nav__link:hover {
+color: var(--gold);
+transform: translateY(-3px);
+text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+}
+
+.urbat-nav__link:hover .urbat-nav__icon {
+transform: scale(1.2) rotate(10deg);
+}
+
+.urbat-nav__link:hover .urbat-nav__icon-aura {
+opacity: 0.4;
+transform: scale(1.5);
+}
+
+.urbat-nav__link:hover .urbat-nav__gold-bar {
+width: 80%;
+}
+
+.urbat-nav__link:hover .urbat-nav__diamond-effect {
+opacity: 0.8;
+transform: rotate(45deg) scale(1) translateY(-4px);
+right: 6px;
+top: 6px;
+
+}
+
+/* Animación del badge */
+@keyframes badge-pulse {
+0%, 100% { transform: scale(1); box-shadow: 0 0 0 rgba(255,215,0,0.4); }
+50% { transform: scale(1.1); box-shadow: 0 0 10px rgba(255,215,0,0.8); }
+}
+
+/* Efecto activo */
+.urbat-nav__link.active {
+background: rgba(255, 215, 0, 0.1);
+border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.urbat-nav__link.active .urbat-nav__gold-bar {
+width: 100%;
+height: 3px;
+}
+
+/* ===============================
+   Botones URBAT Premium 
+================================== */
+.urbat-buttons-container {
+    display: flex;
+    gap: 8px; /* Espacio entre botones */
+    align-items: center;
+    justify-content: center; /* Centrar horizontalmente */
+    padding: 12px;
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.urbat-btn {
+    --urbat-gold: #FFD700;
+    --urbat-sky: #7EC8FF;
+    --urbat-white: rgba(255, 255, 255, 0.95);
+    --urbat-dark: rgba(10, 10, 20, 0.8);
+    
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 28px;
+    color: var(--urbat-white);
+    border-radius: 50px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border: none;
+    cursor: pointer;
+    z-index: 1;
+    min-width: 160px; /* Mismo tamaño para todos */
+}
+
+/* Icono */
+.urbat-btn__icon {
+    font-size: 1.1rem;
+    transition: all 0.5s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+    z-index: 2;
+}
+
+/* Texto */
+.urbat-btn__text {
+    position: relative;
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+/* Flecha */
+.urbat-btn__arrow {
+    margin-left: 6px;
+    transition: all 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+    z-index: 2;
+}
+
+.urbat-btn__arrow svg {
+    width: 14px;
+    height: 14px;
+    stroke-width: 2.5px;
+}
+
+/* Efecto hover (brillo dinámico) */
+.urbat-btn__hover {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.25),
+        transparent
+    );
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: skewX(-20deg);
+    z-index: 1;
+}
+
+/* Efecto de profundidad */
+.urbat-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    z-index: -1;
+}
+
+/* -------------------------------
+   Estilos específicos por botón
+-------------------------------- */
+
+/* BOTÓN MAPA (Celeste) */
+.urbat-btn--map {
+    background: var(--urbat-sky);
+    color: var(--urbat-dark);
+    box-shadow: 0 4px 25px rgba(126, 200, 255, 0.5);
+}
+
+.urbat-btn--map:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 30px rgba(126, 200, 255, 0.7);
+}
+
+/* BOTÓN REGISTRARSE (Dorado) */
+.urbat-btn--register {
+    background: var(--urbat-gold);
+    color: var(--urbat-dark);
+    box-shadow: 0 4px 25px rgba(255, 215, 0, 0.5);
+}
+
+.urbat-btn--register:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 30px rgba(255, 215, 0, 0.7);
+}
+
+/* BOTÓN LOGIN (Transparente premium) */
+.urbat-btn--login {
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--urbat-sky);
+    box-shadow: 0 4px 35px rgba(126, 200, 255, 0.3);
+}
+
+.urbat-btn--login:hover {
+    background: rgba(30, 40, 70, 0.8);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(126, 200, 255, 0.5);
+}
+
+/* -------------------------------
+   Efectos hover premium
+-------------------------------- */
+.urbat-btn:hover {
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+.urbat-btn:hover::before {
+    opacity: 1;
+}
+
+.urbat-btn:hover .urbat-btn__hover {
+    left: 150%;
+}
+
+.urbat-btn:hover .urbat-btn__icon {
+    transform: rotate(10deg) scale(1.15);
+    filter: drop-shadow(0 0 4px rgba(255,255,255,0.5));
+}
+
+.urbat-btn:hover .urbat-btn__arrow {
+    transform: translateX(5px);
+}
+
+.urbat-btn:hover .urbat-btn__text {
+    letter-spacing: 0.5px;
+}
+
+/* Efecto de onda al hacer clic */
+@keyframes urbat-btn-wave {
+    0% { transform: scale(1); opacity: 0.7; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
+
+.urbat-btn:active::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: urbat-btn-wave 0.6s ease-out;
+    z-index: 0;
+}
+
+/* Efecto de brillo dorado para todos */
+.urbat-btn::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    z-index: -1;
+}
+
+.urbat-btn:hover::after {
+    opacity: 0.4;
+}
+
+/* Efecto activo */
+.btn-resume:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 10px rgba(var(--primary-rgb), 0.2);
+}
+
+/* ===============================
+   Mobile Navigation Styles 
+================================== */
+:root {
+    --color-accent: #FFD700;
+    --color-highlight: #7EC8FF;
+    --color-light: rgba(255, 255, 255, 0.95);
+    --color-dark: rgba(10, 10, 20, 0.8);
+  }
+  
+  /* Hamburger Button */
+  .nav-hamburger-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 100;
+    transition: transform 0.3s ease;
+  }
+  
+  .nav-hamburger-box {
+    width: 2rem;
+    height: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .nav-hamburger-line {
+    width: 100%;
+    height: 0.2rem;
+    background: var(--color-accent);
+    border-radius: 2px;
+    transition: transform 0.4s ease, opacity 0.2s ease;
+  }
+  
+  /* Hamburger Animation */
+  .nav-hamburger-btn--active .nav-hamburger-line--top {
+    transform: translateY(0.65rem) rotate(45deg);
+  }
+  .nav-hamburger-btn--active .nav-hamburger-line--middle {
+    opacity: 0;
+  }
+  .nav-hamburger-btn--active .nav-hamburger-line--bottom {
+    transform: translateY(-0.65rem) rotate(-45deg);
+  }
+  
+  /* Mobile Menu */
+  .nav-mobile-menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 75%;
+    height: 100%;
+    background: var(--color-dark);
+    backdrop-filter: blur(10px);
+    transition: right 0.5s ease;
+    z-index: 90;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .nav-mobile-menu--visible {
+    right: 0;
+  }
+  
+  .nav-mobile-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .nav-mobile-item {
+    margin: 1rem 0;
+  }
+  
+  .nav-mobile-link {
+    display: flex;
+    align-items: center;
+    color: var(--color-light);
+    font-size: 1.2rem;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .nav-mobile-icon {
+    color: var(--color-highlight);
+    margin-right: 0.5rem;
+  }
+  
+  .nav-mobile-text {
+    margin-left: 0.5rem;
+  }
+  
+  .nav-mobile-badge {
+    margin-left: auto;
+    background: var(--color-accent);
+    color: var(--color-dark);
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+  }
+  
+  /* Responsive Behavior */
+  @media (max-width: 768px) {
+    .nav-hamburger-btn {
+      display: inline-flex;
+    }
+    
+    .nav-desktop {
+      display: none;
+    }
+  }
+
+/*═══════════════════════════════════════════════╗
+  ✨  RESPONSIVE DESIGN — ICON ONLY ≤ 1800px   ✨
+═══════════════════════════════════════════════*/
+@media screen and (max-width: 1799px) {
+  .urbat-logo__text-container {
+    display: none;
+  }
+}
+
+
+
