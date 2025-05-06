@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import { 
   faHome,
   faBullhorn,
@@ -47,7 +48,7 @@ export default function Header() {
     { 
       href: '#projects', 
       icon: faNewspaper, // Icono más adecuado
-      text: 'Noticias',
+      text: 'Posts',
       badge: 'NEW'
     },
     { 
@@ -70,11 +71,10 @@ export default function Header() {
     },
   ];
 
+
   return (
     <header className="perfil-header">
       <div id="particles-js" className="particles-container"></div>
-      <div className="glass-overlay"></div>
-
       <div className="header-container">
         <nav className="navbar" aria-label="Menú principal">
           <div className="navbar-container">
@@ -180,7 +180,6 @@ export default function Header() {
               </div>
             </div>
           </div>
-
           <div className="navbar-background"></div>
           <div className="navbar-highlight"></div>
         </nav>

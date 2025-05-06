@@ -1,0 +1,37 @@
+/* Estructura principal */
+.premium-app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--darker); /* Usa tu variable de color */
+  position: relative;
+}
+
+/* Contenido principal */
+.premium-main-content {
+  flex: 1;
+  padding-top: 100px; /* Ajusta según altura de tu header */
+  position: relative;
+  z-index: 2;
+}
+
+/* Ajustes específicos para el mapa */
+.map-container {
+  height: calc(100vh - 150px); /* Ajusta según header y footer */
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 0 auto;
+  max-width: 1800px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+/* Efecto glass para el contenedor del mapa */
+.map-glass-effect {
+  backdrop-filter: blur(10px);
+  background: rgba(15, 23, 42, 0.7);
+  border-radius: 20px;
+  padding: 20px;
+  margin: 20px;
+}

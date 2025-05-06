@@ -7,6 +7,7 @@ import Register from './auth/Register';
 import ForgotPassword from './auth/ForgotPassword';
 import ResetPassword from './auth/ResetPassword';
 import VerifyCode from './auth/VerifyCode';
+import MapComponent from './components/Map/MapComponent';
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Inicio />} />
+          <Route path="mapa" element={<MapComponent />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

@@ -1,0 +1,311 @@
+/* Estilos base del footer */
+.urbat-footer {
+    position: relative;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 215, 0, 0.2);
+    color: rgba(255, 255, 255, 0.8);
+    padding: 40px 0 0;
+    z-index: 10;
+    overflow: hidden;
+  }
+  
+  /* Barra superior decorativa */
+  .footer-highlight-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(
+      90deg, 
+      rgba(255, 215, 0, 0) 0%, 
+      rgba(255, 215, 0, 0.8) 25%, 
+      rgba(126, 200, 255, 0.8) 50%, 
+      rgba(255, 215, 0, 0.8) 75%, 
+      rgba(255, 215, 0, 0) 100%
+    );
+    animation: gradient-flow 8s ease infinite;
+  }
+  
+  /* Contenido principal del footer */
+  .footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px 40px;
+  }
+  
+  /* Secciones del footer */
+  .footer-section {
+    padding: 20px;
+  }
+  
+  .footer-title {
+    color: #FFD700;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 10px;
+  }
+  
+  .footer-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background: linear-gradient(90deg, #FFD700, #7EC8FF);
+  }
+  
+  /* Logo y marca */
+  .footer-logo {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 10px;
+  }
+  
+  .logo-highlight {
+    background: linear-gradient(135deg, #FFD700 0%, #FFC600 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  
+  .footer-tagline {
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+  
+  /* Redes sociales */
+  .footer-social {
+    display: flex;
+    gap: 15px;
+  }
+  
+  .social-icon {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 215, 0, 0.1);
+  }
+  
+  .social-icon:hover {
+    color: #FFD700;
+    background: rgba(255, 215, 0, 0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.2);
+  }
+  
+  /* Enlaces */
+  .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .footer-link {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    display: block;
+    padding: 8px 0;
+    transition: all 0.3s ease;
+    position: relative;
+    padding-left: 20px;
+  }
+  
+  .footer-link::before {
+    content: '»';
+    position: absolute;
+    left: 0;
+    color: #7EC8FF;
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+  
+  .footer-link:hover {
+    color: #FFD700;
+    padding-left: 25px;
+  }
+  
+  .footer-link:hover::before {
+    opacity: 1;
+    left: 5px;
+  }
+  
+  /* Información de contacto */
+  .footer-contact {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .footer-contact li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+  }
+  
+  .footer-contact i {
+    color: #7EC8FF;
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+  }
+  
+  /* Newsletter */
+  .newsletter-text {
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+  
+  .newsletter-form {
+    display: flex;
+    position: relative;
+  }
+  
+  .newsletter-input {
+    flex: 1;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 0.9rem;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+  }
+  
+  .newsletter-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .newsletter-input:focus {
+    outline: none;
+    border-color: #7EC8FF;
+    box-shadow: 0 0 0 2px rgba(126, 200, 255, 0.3);
+  }
+  
+  .newsletter-btn {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #0f172a;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .newsletter-btn:hover {
+    transform: scale(1.1) rotate(20deg);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+  }
+  
+  /* Pie inferior */
+  .footer-bottom {
+    background: rgba(10, 15, 30, 0.8);
+    padding: 20px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .footer-copyright {
+    order: 2;
+  }
+  
+  .footer-legal {
+    order: 1;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .legal-link {
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  
+  .legal-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: #7EC8FF;
+    transition: width 0.3s ease;
+  }
+  
+  .legal-link:hover {
+    color: #FFD700;
+  }
+  
+  .legal-link:hover::after {
+    width: 100%;
+  }
+  
+  /* Efecto de partículas */
+  .footer-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+      radial-gradient(circle at 20% 80%, rgba(255, 215, 0, 0.03) 0%, transparent 20%),
+      radial-gradient(circle at 80% 20%, rgba(126, 200, 255, 0.03) 0%, transparent 20%);
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  /* Animación de la barra superior */
+  @keyframes gradient-flow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .footer-content {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    
+    .footer-section {
+      padding: 15px;
+    }
+    
+    .footer-legal {
+      flex-direction: column;
+      gap: 5px;
+    }
+  }

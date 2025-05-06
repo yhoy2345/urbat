@@ -11,64 +11,49 @@
 }
 
 .premium-header {
-    position: relative;
-    min-height: 100vh;
-    padding-top: 30px;
-    background: var(--darker);
-    overflow: hidden;
+  position: fixed; /* Cambiado a fixed para header permanente */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px; /* Altura fija para el header */
+  background: rgba(15, 23, 42, 0.95); /* Fondo semitransparente */
+  backdrop-filter: blur(10px); /* Efecto de desenfoque */
+  z-index: 1000; /* Asegura que esté por encima de otros elementos */
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--urbat-gold); /* Borde dorado sutil */
+  transition: all 0.3s ease;
 }
 
-.particles-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-}
-
-.glass-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        135deg, 
-        rgba(15, 23, 42, 0.15) 0%, 
-        rgba(2, 6, 23, 0.2) 100%
-    );
-    backdrop-filter: blur(4px) saturate(200%);
-    -webkit-backdrop-filter: blur(2px) saturate(180%);
-    z-index: 2;
-    box-shadow: inset 0 0 60px rgba(2, 6, 23, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    mix-blend-mode: overlay;
-}
-
-.perfil-header {
-    position: relative;
-    min-height: 100vh;
-    background: var(--darker);
-    overflow: visible;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    z-index: 1;
-    padding-top: 30px; 
-}
-
+/* Contenedor interno para el contenido */
 .header-container {
-    position: relative;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    z-index: 3;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Efecto de partículas (opcional) */
+.particles-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* Detrás del contenido */
+  pointer-events: none; /* Permite interacción con elementos debajo */
+}
+
+/* Sección de perfil (si es necesaria) */
+.perfil-header {
+  position: relative;
+  margin-top: 80px; /* Compensa el header fijo */
+  padding: 30px 0;
+  background: var(--darker);
+  z-index: 2;
 }
 /* ===========================
    Navbar
@@ -537,10 +522,6 @@
         transform: translateY(0);
     }
 }
-
-
-
-
 
 /* ========================
 UR BAT NAV
