@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link, NavLink } from 'react-router-dom';
+
 
 import { 
   faHome,
@@ -35,36 +37,36 @@ export default function Header() {
 
   const navLinks = [
     { 
-      href: '#about', 
+      href: '/', 
       icon: faHome, // Icono de inicio moderno
       badge: null
     },
     { 
-      href: '#experience', 
+      href: '/Reportar', 
       icon: faBullhorn, // Icono para reportar
       text: 'Reportar',
       badge: null // Mejor badge
     },
     { 
-      href: '#projects', 
+      href: '/posts', 
       icon: faNewspaper, // Icono más adecuado
       text: 'Posts',
       badge: 'NEW'
     },
     { 
-      href: '#profile', 
+      href: '/perfil', 
       icon: faUserCircle, // Icono de perfil profesional
       text: 'Perfil',
       badge: null
     },
     { 
-      href: '#about-us', 
+      href: '/nosotros', 
       icon: faUsers, // Icono para "nosotros"
       text: 'Nosotros',
       badge: null
     },
     { 
-      href: '#contact', 
+      href: '/contacto', 
       icon: faPaperPlane, // Icono moderno para contacto
       text: 'Contacto',
       badge: null
@@ -78,7 +80,7 @@ export default function Header() {
       <div className="header-container">
         <nav className="navbar" aria-label="Menú principal">
           <div className="navbar-container">
-            <a href="/perfil.html" className="urbat-logo" aria-label="Inicio - UR BAT">
+          <Link to="/" className="urbat-logo" aria-label="Inicio - UR BAT">
               <span className="urbat-logo__icon-container">
                 <span className="urbat-logo__icon">
                   <img 
@@ -100,13 +102,17 @@ export default function Header() {
               
               <span className="urbat-logo__hover-effect"></span>
               <span className="urbat-logo__active-glow"></span>
-            </a>
+            </Link>
 
             <div className="nav-right">
               <ul className="urbat-nav__horizontal">
-                {navLinks.slice(0,6).map(({ href, icon, text, badge }) => (
+                {navLinks.map(({ href, icon, text, badge }) => (
                   <li className="urbat-nav__item" key={text}>
-                    <a href={href} className="urbat-nav__link">
+                    <Link 
+                      to={href.replace('#', '')} // Elimina el # para rutas limpias
+                      className="urbat-nav__link"
+                    >
+                      {/* Mantén el resto de tu estructura de iconos/texto igual */}
                       <span className="urbat-nav__icon-wrapper">
                         <FontAwesomeIcon icon={icon} className="urbat-nav__icon" />
                         <span className="urbat-nav__icon-aura"></span>
@@ -117,7 +123,7 @@ export default function Header() {
                       </span>
                       <span className="urbat-nav__gold-bar"></span>
                       <span className="urbat-nav__diamond-effect"></span>
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -169,11 +175,11 @@ export default function Header() {
                 <ul className="nav-mobile-list">
                   {navLinks.map(({ href, icon, text, badge }) => (
                     <li key={text} className="nav-mobile-item" onClick={() => setMenuOpen(false)}>
-                      <a href={href} className="nav-mobile-link">
+                      <Link to={href.toLowerCase()}  className="nav-mobile-link">
                         <FontAwesomeIcon icon={icon} className="nav-mobile-icon" />
                         <span className="nav-mobile-text">{text}</span>
                         {badge && <span className="nav-mobile-badge">{badge}</span>}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>

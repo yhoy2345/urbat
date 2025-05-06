@@ -8,6 +8,8 @@ import ForgotPassword from './auth/ForgotPassword';
 import ResetPassword from './auth/ResetPassword';
 import VerifyCode from './auth/VerifyCode';
 import MapComponent from './components/Map/MapComponent';
+import MapaSeleccion from './components/sections/Reportar/MapaSeleccion';
+import Reportar from './components/sections/Reportar/Reportar'; 
 
 export default function App() {
   return (
@@ -15,7 +17,9 @@ export default function App() {
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Inicio />} />
-          <Route path="mapa" element={<MapComponent />} />
+          <Route path="/mapa" element={<MapComponent />} />
+          <Route path="/reportar" element={<Reportar />} />
+          <Route path="/seleccionar-ubicacion" element={<MapaSeleccion />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

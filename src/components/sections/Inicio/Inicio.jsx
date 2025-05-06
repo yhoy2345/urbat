@@ -32,7 +32,7 @@ const Inicio = () => {
           </span>
         </p>
       </div>
-      <div className="map-section" style={{ marginTop: '2rem' }}>
+      <div className="map-section" style={{ marginTop: '3rem' }}>
         <MapComponent />
       </div>
       
