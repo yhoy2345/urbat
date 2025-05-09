@@ -1,61 +1,212 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --urbat-gold: #FFD700;
+  --urbat-sky: #2f99eb;
+  --urbat-white: rgba(255, 255, 255, 0.95);
+  --urbat-dark: rgba(10, 10, 20, 0.8);
+  --urbat-glass: rgba(15, 23, 42, 0.7);
+  --urbat-border: rgba(255, 215, 0, 0.3);
+  --urbat-glow: rgba(255, 215, 0, 0.5);
+  --color-bg: rgba(15, 23, 42, 0.85);
+  --color-text-faint: rgba(255, 255, 255, 0.8);
+  --transition-fast: 0.3s ease;
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+
+  --radius-lg: 0.75rem;
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; transform: scale(0.95); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+@keyframes particleMove {
+  0% { transform: translate(0, 0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translate(var(--move-x), var(--move-y)); opacity: 0; }
+}
+
+@keyframes titleEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    filter: blur(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    text-shadow: 
+      0 0 10px var(--urbat-glow),
+      0 0 20px rgba(126, 200, 255, 0.3);
+  }
+  50% {
+    text-shadow: 
+      0 0 20px var(--urbat-glow),
+      0 0 40px rgba(126, 200, 255, 0.5),
+      0 0 60px rgba(126, 200, 255, 0.2);
+  }
+}
+
+@keyframes sparkleTrail {
+  0% {
+    transform: translateX(-100%) scale(0.8);
+    opacity: 0;
+  }
+  20%, 80% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateX(100%) scale(1.2);
+    opacity: 0;
+  }
+}
+
+@keyframes backgroundPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+
+
 .map-section {
-  height: 400px;
-  width: 100%;
-  height: calc(100vh - 60px); /* Resta la altura del header */
+  font-family: 'Montserrat', sans-serif;
   position: relative;
+  width: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  animation: fadeInUp 0.6s ease-out;
+  margin-bottom: var(--spacing-md);
+  border: 1px solid var(--urbat-border);
+  background: var(--urbat-glass);
+  backdrop-filter: blur(8px);
 }
 
 .huanuco-map {
-  height: 100%;
-  width: 100%;
-  z-index: 1;
+  border-radius: var(--radius-lg);
+  transition: var(--transition-fast);
 }
 
-.map-controls {
+.huanuco-map:hover {
+  box-shadow: 0 0 20px var(--urbat-glow);
+}
+
+.leaflet-container {
+  background-color: var(--urbat-dark) !important;
+}
+
+.leaflet-control {
+  background: var(--urbat-glass) !important;
+  backdrop-filter: blur(8px) !important;
+  border: 1px solid var(--urbat-border) !important;
+  color: var(--urbat-white) !important;
+  border-radius: var(--radius-lg) !important;
+}
+
+.leaflet-bar a {
+  color: var(--urbat-white) !important;
+  background: var(--urbat-glass) !important;
+  border-bottom: 1px solid var(--urbat-border) !important;
+}
+
+.leaflet-bar a:hover {
+  background: var(--urbat-sky) !important;
+  color: var(--urbat-dark) !important;
+}
+
+.leaflet-popup-content-wrapper {
+  background: var(--urbat-glass) !important;
+  backdrop-filter: blur(8px) !important;
+  border: 1px solid var(--urbat-border) !important;
+  border-radius: var(--radius-lg) !important;
+  color: var(--urbat-white) !important;
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.leaflet-popup-content {
+  margin: var(--spacing-sm) !important;
+}
+
+.leaflet-popup-tip {
+  background: var(--urbat-glass) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+.leaflet-marker-icon {
+  filter: drop-shadow(0 0 8px var(--urbat-glow));
+  transition: var(--transition-fast);
+}
+
+.leaflet-marker-icon:hover {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 12px var(--urbat-gold));
+}
+
+/* Alert Form styling (assuming it's a child of map-section) */
+.map-section .alert-form-container {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  bottom: var(--spacing-md);
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 1000;
-}
-
-.report-button {
-  background-color: #e74c3c;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  z-index: 1000;
-}
-
-.report-button:hover {
-  background-color: #c0392b;
-}
-
-/* Estilos para el formulario de alertas */
-.alert-form-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0,0,0,0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-}
-
-.alert-form-container {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
   width: 90%;
   max-width: 500px;
-  max-height: 90vh;
-  overflow-y: auto;
+  background: var(--urbat-glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--urbat-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  animation: fadeInUp 0.4s ease-out;
 }
 
-/* Otros estilos necesarios... */
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .map-section {
+    border-radius: 0;
+    margin-bottom: 0;
+  }
+  
+  .huanuco-map {
+    height: 350px !important;
+  }
+  
+  .map-section .alert-form-container {
+    width: 95%;
+    padding: var(--spacing-sm);
+  }
+}
