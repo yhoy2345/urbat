@@ -23,12 +23,22 @@ const Register = () => {
     setError('');
     
     try {
-      // Simular registro
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      // Redirigir al login después del registro
+      const response = await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al registrar');
+      }
+
       navigate('/login');
+      
     } catch (err) {
-      setError('Error al registrar. Intenta nuevamente.');
+      setError(err.message);
     } finally {
       setIsLoading(false);
     }
@@ -72,6 +82,7 @@ const Register = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              minLength="6"
             />
           </div>
           

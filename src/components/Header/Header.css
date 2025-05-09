@@ -1400,3 +1400,51 @@ height: 3px;
     display: none !important;
   }
 }
+
+
+/*═══════════════════════════════════════════════╗
+  DEL LOGEO INICIO SESSION
+═══════════════════════════════════════════════*/
+/* Estilos para el usuario logueado */
+.user-logged-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-greeting {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+}
+
+.user-icon {
+  color: #4fc3f7;
+  font-size: 1.2rem;
+}
+
+.welcome-message {
+  color: #e0e0e0;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.user-name {
+  color: #4fc3f7;
+  font-weight: 600;
+}
+
+.urbat-btn--logout {
+  background: linear-gradient(135deg, #ff5252, #d32f2f);
+  min-width: 100px;
+  padding: 0.5rem 1rem;
+}
+
+.urbat-btn--logout:hover {
+  background: linear-gradient(135deg, #d32f2f, #b71c1c);
+}
+
+.urbat-btn--logout .urbat-btn__text {
+  font-size: 0.9rem;
+}
