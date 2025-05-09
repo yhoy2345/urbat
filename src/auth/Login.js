@@ -23,9 +23,15 @@ const Login = () => {
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Credenciales incorrectas');
-      }
+          if (response.ok) {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify({
+        id: data.user.id,
+        nombre: data.user.nombre,  // ← Usa el mismo nombre que el backend
+        email: data.user.email
+      }));
+       navigate('/');
+   }   
 
     // Guarda TODOS los datos del usuario, incluido el nombre
     localStorage.setItem('token', data.token);

@@ -9,27 +9,34 @@ import ResetPassword from './auth/ResetPassword';
 import VerifyCode from './auth/VerifyCode';
 import MapManager from './components/Map/MapManager';
 import Reportar from './components/sections/Reportar/Reportar'; 
+import Perfil from './components/sections/Perfil/Perfil'; 
 import ReportarForm from './components/sections/Reportar/AlertForm';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css';
 import 'leaflet-defaulticon-compatibility';
 
-
 export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<MainLayout />}>
-          <Route index element={<Inicio />} />
-          <Route path="/mapa" render={() => <MapManager />}  />
-          <Route path="/reportar" element={<Reportar />} />
-          <Route path="/reportar-form" element={<ReportarForm />} />
-        </Route>
+        {/* Rutas públicas (sin layout) */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/verify-code" element={<VerifyCode />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        
+        {/* Rutas protegidas (con layout MainLayout) */}
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<Inicio />} />
+          <Route path="mapa" element={<MapManager />} />
+          <Route path="reportar" element={<Reportar />} />
+          <Route path="reportar-form" element={<ReportarForm />} />
+          <Route path="perfil" element={<Perfil />} />
+          
+          {/* Ruta para manejar páginas no encontradas (opcional) */}
+          <Route path="*" element={<div>Página no encontrada</div>} />
+        </Route>
       </Routes>
     </Router>
   );

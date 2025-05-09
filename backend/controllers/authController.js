@@ -44,7 +44,7 @@ const login = async (req, res) => {
     // Asegúrate de devolver el nombre
     const userData = {
       id: user.rows[0].id,
-      name: user.rows[0].nombre_completo || user.rows[0].nombre || 'Usuario',
+      nombre: user.rows[0].nombre,  // ← Usa el nombre de columna correcto
       email: user.rows[0].email
     };
 
@@ -58,6 +58,51 @@ const login = async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: 'Error al iniciar sesión' });
   }
+};
+
+
+// Obtener datos del perfil
+const getProfile = async (req, res) => {
+  try {
+    const userId = req.userId; // Esto viene del middleware de autenticación
+    
+      const result = await pool.query(
+      'SELECT id, nombre, email, created_at FROM usuarios WHERE id = $1',
+      [userId]
+    );
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+    
+    res.json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: 'Error al obtener perfil' });
+  }
+};
+
+const authenticateToken = (req, res, next) => {
+  const token = req.headers['authorization']?.split(' ')[1];
+  
+  if (!token) {
+    return res.status(401).json({ error: 'Token no proporcionado' });
+  }
+
+  jwt.verify(token, 'tu_secreto_jwt', (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ error: 'Token inválido' });
+    }
+    req.userId = decoded.userId;
+    next();
+  });
+};
+
+// Modifica el module.exports para incluir getProfile y authenticateToken
+module.exports = { 
+  register, 
+  login, 
+  getProfile,
+  authenticateToken
 };
 
 module.exports = { register, login };
