@@ -1,115 +1,259 @@
-.map-section {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
-    height: calc(100vh - 60px); /* Resta la altura del header */
-    position: relative;
-  }
+/* Estilo base */
+.batman-container {
+  position: relative;
+  width: 50px;
+  height: 70px;
+  transform-origin: bottom center;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+/* Head */
+.batman-head {
+  position: absolute;
+  width: 30px;
+  height: 30px;
   
-  .huanuco-map {
-    height: 100%;
-    width: 100%;
-    z-index: 1;
-    flex: 1;
-  }
+  background: #111;
+  border-radius: 50%;
+  top: 0.8px;
+  left: calc(50% - 15px);
+  z-index: 4;
+  overflow: visible;
+}
+
+/* Ears */
+.batman-ears {
+  position: absolute;
+  top: -6px;
+  width: 30px;
+  left: calc(50% - 15px);   
+  height: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.batman-ear {
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 15px solid #111;
+  background: none;      
+}
+
+.batman-ear.left {
+  border-radius: 50% 50% 0 0;
+  transform: translateX(-2px) rotate(-17deg);
+}
+
+.batman-ear.right {
+  border-radius: 50% 50% 0 0;
+  transform: translateX(2px) rotate(17deg);
+}
+
+/* Eyes */
+.batman-eyes {
+  position: absolute;
+  top: 12px;
+  justify-content: center;
+  width: 100%;
+  gap: 4px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.batman-eye {
+  width: 8px;
+  height: 4px;
+  background: #FFD700;
+  box-shadow: 0 0 4px #FFD700;
+  border-radius: 2px;  /* muy sutil */
+  transform-origin: center;     
+}
+
+.batman-eye:first-child {
+  transform: rotate(20deg);
+}
+.batman-eye:last-child {
+  transform: rotate(-20deg);
+}
+
+/* Mouth */
+.batman-mouth {
+  position: absolute;
+   /* Elimina el fondo oscuro */
+  background: none;
   
-  .map-controls {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 1000;
-  }
-  
-  .report-button {
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    z-index: 1000;
-  }
-  
-  .report-button:hover {
-    background-color: #c0392b;
-  }
-  
-  /* Estilos para el formulario de alertas */
-  .alert-form-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0,0,0,0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  .alert-form-container {
-    background: rgb(22, 22, 22);
-    padding: 20px;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 600px;
-  }
-  
-  .map-preview {
-    margin: 15px 0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    overflow: hidden;
-    height: 300px; /* Asegura que el mapa tenga una altura */
-    width: 100%; /* Asegura que el mapa ocupe todo el ancho disponible */
-    position: relative;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-  }
-  
-  .cancel-btn, .submit-btn {
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .cancel-btn {
-    background-color: red;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  button.cancel-btn:hover {
-    background-color: darkred;
-  }
-  
-  button.submit-btn {
-    background-color: green;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  button.submit-btn:hover {
-    background-color: darkgreen;
-  }
-  
+  /* Tamaño y posición */
+  width: 20px;              
+  height: 7px;              
+  bottom: auto;   
+  top: 16px;           
+  left: calc(50% - 9.5px);    
+
+  /* Dibuja sólo la curva inferior como sonrisa */
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 3px solid #f2c2a0; /* color de piel suave */
+  border-radius: 0 0 50% 50%;  
+}
+
+/* Body */
+.batman-body {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 40px;
+  height: 60px;
+  background: #111;
+  --clip: polygon(
+    50% 0%,
+    85% 35%,
+    75% 75%,
+    50% 100%,
+    25% 75%,
+    15% 35%
+  );
+  clip-path: var(--clip);
+  transform: translateX(-50%);
+  border-radius: 20px 20px 30px 30px;
+  transition: all 0.4s ease;
+  z-index: 3;
+}
+
+/* Refined tip: a small spike at the bottom center */
+.batman-body::after {
+  content: '';
+  position: visible;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  background: #111;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+
+/* Golden logo in center */
+.batman-logo {
+  position: absolute;
+  width: 24px;
+  height: 24px; /* Ajustado para mejor proporción */
+  top: 25px; /* Posicionado más arriba en el pecho */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  padding: 2px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.batman-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 2px black);
+}
+
+
+/* Simple shadow directly under the tip */
+.batman-shadow {
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  filter: blur(4px);
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  z-index: 1;
+}
+
+/* Hover: exaggerate drop and sharpen tip */
+.batman-marker:hover .batman-body {
+  height: 80px;
+  border-radius: 25px 25px 40px 40px;
+}
+.batman-marker:hover .batman-body::after {
+  bottom: -8px;
+  width: 16px;
+  height: 16px;
+}
+.batman-marker:hover .batman-shadow {
+  transform: translateX(-50%) scale(1.1);
+  opacity: 0.5;
+}
+
+/* Flying state: arms up */
+.batman-arms {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  width: 40px;
+  height: 20px;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: space-between;
+  transition: transform 0.4s ease;
+  z-index: 4;
+}
+.batman-arm {
+  width: 6px;
+  height: 20px;
+  background: #111;
+}
+.batman-marker.flying .batman-arms {
+  transform: translate(-50%, -15px);
+}
+.batman-marker.flying .batman-arm.left {
+  transform-origin: top right;
+  transform: rotate(-60deg);
+}
+.batman-marker.flying .batman-arm.right {
+  transform-origin: top left;
+  transform: rotate(60deg);
+}
+
+/* Estilos para el globo de pensamiento */
+.thought-bubble {
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  border-radius: 20px;
+  padding: 5px 10px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.thought-bubble:after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 10px 8px 0;
+  border-style: solid;
+  border-color: white transparent;
+}
+
+.thought-text {
+  font-family: 'Comic Sans MS', cursive;
+  font-size: 12px;
+  font-weight: bold;
+  color: #333;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}

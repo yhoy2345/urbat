@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './Reportar.css';
-
+import AlertForm from './AlertForm'; 
 import CameraComponent from './CamaraComponent';
 
 const Reportar = () => {
@@ -12,6 +12,7 @@ const Reportar = () => {
   const [descripcion, setDescripcion] = useState('');
   const [ubicacion, setUbicacion] = useState(null);
   const [error, setError] = useState('');
+  const [showAlertForm, setShowAlertForm] = useState(false);
   
   // Nuevos estados para manejar las nuevas funcionalidades
   const [reporteExitoso, setReporteExitoso] = useState(false);
@@ -76,6 +77,22 @@ const Reportar = () => {
         ubicacionActual: ubicacion // Envía la ubicación actual si existe
       }
     });
+  };
+
+   // Función para abrir el formulario de alerta
+  const handleOpenAlertForm = () => {
+    setShowAlertForm(true);
+  };
+
+  // Función para cerrar el formulario de alerta
+  const handleCancel = () => {
+    setShowAlertForm(false);
+  };
+
+  // Función para manejar el envío del formulario (si es necesario)
+  const handleSubmitAlert = (report) => {
+    console.log('Reporte enviado:', report);
+    setShowAlertForm(false); // Cierra el formulario después de enviar
   };
 
   useEffect(() => {
@@ -166,7 +183,7 @@ const Reportar = () => {
           <button
             type="button"
             className="location-button"
-            onClick={handleElegirUbicacion}
+            onClick={handleOpenAlertForm}
           >
             <i className="icon-pin"></i> Seleccionar Ubicación
           </button>
@@ -192,6 +209,7 @@ const Reportar = () => {
             </div>
           )}
         </div>
+        
 
 
         {/* Sección de multimedia - más intuitiva */}
@@ -398,6 +416,13 @@ const Reportar = () => {
           ))}
         </div>
       </div>
+      {/* Mostrar AlertForm solo si showAlertForm es true */}
+      {showAlertForm && (
+        <AlertForm
+          onSubmit={handleSubmitAlert}
+          onCancel={handleCancel} // Pasa la función de cancelar
+        />
+      )}
     </div>
   );
 };

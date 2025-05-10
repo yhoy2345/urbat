@@ -486,6 +486,8 @@ textarea:focus {
   margin-top: var(--spacing-xs);
 }
 
+
+
 /* Sección de ubicación */
 .location-button {
   background: var(--urbat-glass);
