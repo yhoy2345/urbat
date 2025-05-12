@@ -9,7 +9,7 @@ const AlertForm = ({ defaultPosition = FALLBACK_POSITION, onSubmit, onCancel }) 
   const [position, setPosition] = useState(defaultPosition);
   const [currentAddress, setCurrentAddress] = useState('');
   const [description, setDescription] = useState('');
-  const [alertType, setAlertType] = useState('danger');
+  const [alertType] = useState('danger');
   const [isMapReady, setIsMapInitialized] = useState(false);
   const [isGeocoding, setIsGeocoding] = useState(false);
   const [isLocating, setIsLocating] = useState(true); // Nuevo estado para rastrear si se está obteniendo la ubicación
@@ -141,42 +141,6 @@ const AlertForm = ({ defaultPosition = FALLBACK_POSITION, onSubmit, onCancel }) 
 
         {/* Resto del formulario (deshabilitado mientras se obtiene la ubicación) */}
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label className="premium-label">Tipo de Alerta:</label>
-            <div className="select-wrapper">
-              <select
-                value={alertType}
-                onChange={(e) => setAlertType(e.target.value)}
-                className="premium-select with-icons"
-              >
-                <option value="danger">
-                  <span className="option-content">
-                    <svg className="option-icon" width="16" height="16" viewBox="0 0 24 24">
-                      <path fill="currentColor" d="M12 2L1 21h22L12 2zm0 3.5L18.5 19h-13L12 5.5zM11 10v4h2v-4h-2zm0 6v2h2v-2h-2z"/>
-                    </svg>
-                    Peligroso 🚨 
-                  </span>
-                </option>
-                <option value="warning">
-                  <span className="option-content">
-                    <svg className="option-icon" width="16" height="16" viewBox="0 0 24 24">
-                      <path fill="currentColor" d="M12 2L1 21h22L12 2zm0 3.5L18.5 19h-13L12 5.5zM13 16h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
-                    </svg>
-                    Advertencia ⚠️ 
-                  </span>
-                </option>
-                <option value="info">
-                  <span className="option-content">
-                    <svg className="option-icon" width="16" height="16" viewBox="0 0 24 24">
-                      <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
-                    </svg>
-                    Informativo ℹ️ 
-                  </span>
-                </option>
-              </select>
-            </div>
-          </div>
-
           <div className="form-group">
             <label>Dirección exacta:</label>
             <input

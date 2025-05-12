@@ -446,3 +446,203 @@
     grid-template-columns: 1fr;
   }
 }
+.premium-title-container {
+  position: relative;
+  margin-bottom: var(--spacing-md);
+  text-align: center;
+}
+
+.premium-title {
+  position: relative;
+  display: inline-block;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--urbat-white);
+  margin: 0;
+  padding-bottom: var(--spacing-sm);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  animation: titleEntrance 0.8s cubic-bezier(0.2, 0.8, 0.4, 1) both;
+}
+
+.title-text {
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+}
+
+.title-highlight {
+  color: var(--urbat-gold);
+  text-shadow: 0 0 8px var(--urbat-glow);
+  animation: glowPulse 3s infinite;
+}
+
+.title-decoration {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.title-star {
+  display: flex;
+  color: var(--urbat-gold);
+  width: 24px;
+  height: 24px;
+  animation: float 4s ease-in-out infinite;
+}
+
+.title-star svg {
+  width: 100%;
+  height: 100%;
+}
+
+.title-line {
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, 
+              transparent, 
+              var(--urbat-border), 
+              transparent);
+  z-index: -1;
+}
+
+.title-afterglow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 180%;
+  height: 180%;
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(12px);
+  animation: 
+    glowPulse 6s ease-in-out infinite alternate,
+    glowMove 15s linear infinite;
+  
+  /* Multi-layer glow effect */
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+  }
+  
+  &::before {
+    background: 
+      radial-gradient(circle at center, 
+        var(--urbat-gold) 0%, 
+        transparent 60%);
+    opacity: 0.4;
+    animation: 
+      innerPulse 4s ease-in-out infinite alternate;
+  }
+  
+  &::after {
+    background: 
+      radial-gradient(circle at center, 
+        var(--urbat-sky) 0%, 
+        transparent 70%);
+    opacity: 0.3;
+    width: 120%;
+    height: 120%;
+    animation: 
+      outerPulse 5s ease-in-out infinite alternate-reverse;
+  }
+}
+
+/* Keyframes mejorados */
+@keyframes glowPulse {
+  0% {
+    opacity: 0.2;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+  100% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
+@keyframes glowMove {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  25% {
+    transform: translate(-52%, -48%) rotate(5deg);
+  }
+  50% {
+    transform: translate(-48%, -52%) rotate(0deg);
+  }
+  75% {
+    transform: translate(-52%, -48%) rotate(-5deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+}
+
+@keyframes innerPulse {
+  0% {
+    opacity: 0.3;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes outerPulse {
+  0% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0.4;
+    transform: scale(1.2);
+  }
+}
+
+/* Efectos hover */
+.premium-title:hover .title-highlight {
+  animation: glowPulse 1.5s infinite;
+}
+
+.premium-title:hover .title-star {
+  transform: rotate(15deg);
+}
+
+/* Animaciones específicas */
+@keyframes titleEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes starTwinkle {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}

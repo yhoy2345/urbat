@@ -32,7 +32,7 @@ const Inicio = () => {
           </span>
         </p>
       </div>
-      <div className="map-section" style={{ marginTop: '3rem' }}>
+      <div className="map-section" style={{ marginTop: '1.5rem' }}>
         <MapComponent />
       </div>
       {/* === Sección de Alertas en Tiem Real === */}
@@ -200,12 +200,6 @@ const Inicio = () => {
           </div>
         </div>
       </section>
-
-      
-      
-      
-      
-
     </div>
   );
 };

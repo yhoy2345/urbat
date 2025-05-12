@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Marker } from 'react-leaflet';
 import './Marcador.css';
 
-const DraggablePersonMarker = ({ position, setPosition, setCurrentAddress, currentAddress }) => {
+const DraggablePersonMarker = ({ position, setPosition, setCurrentAddress, currentAddress, draggable }) => {
   const markerRef = useRef(null);
   const isDraggingRef = useRef(false);
   const [showThought, setShowThought] = useState(false);
@@ -60,16 +60,6 @@ const DraggablePersonMarker = ({ position, setPosition, setCurrentAddress, curre
     }
   };
 
-  <div className="form-group">
-  <label>Dirección exacta en Huánuco:</label>
-  <input
-    type="text"
-    value={isGeocoding ? "Buscando dirección..." : currentAddress}
-    // ... otros props
-  />
-  {isGeocoding && <small>Buscando dirección precisa...</small>}
-</div>
-
   // Actualizar dirección cuando cambia la posición
   const updateAddress = async (newPosition) => {
     const address = await getAddressFromCoords(newPosition.lat, newPosition.lng);
@@ -82,7 +72,7 @@ const DraggablePersonMarker = ({ position, setPosition, setCurrentAddress, curre
     html: `
 
       <div class="batman-container">
-         ${showThought ? 
+        ${showThought ? 
           `<div class="thought-bubble">
             <div class="thought-text">Carajo MRDA!</div>
           </div>` 
@@ -147,10 +137,9 @@ const DraggablePersonMarker = ({ position, setPosition, setCurrentAddress, curre
   return (
     <>
       <Marker
-      
         position={position}
         icon={personIcon}
-        draggable={true}
+        draggable={draggable}
         eventHandlers={{
           click: (e) => {
               // Verificar si el click fue en el logo
@@ -207,15 +196,7 @@ const DraggablePersonMarker = ({ position, setPosition, setCurrentAddress, curre
           markerRef.current = ref;
         }}
       />
-      <div className="form-group">
-        <label>Dirección exacta en Huánuco:</label>
-        <input
-          type="text"
-          value={isGeocoding ? "Buscando dirección..." : currentAddress}
-          readOnly
-        />
-        {isGeocoding && <small>Buscando dirección precisa...</small>}
-      </div>
+      
     </>
   );
 };
