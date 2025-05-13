@@ -141,6 +141,7 @@ const DraggablePersonMarker = ({ position, setPosition, setCurrentAddress, curre
         icon={personIcon}
         draggable={draggable}
         eventHandlers={{
+          
           click: (e) => {
               // Verificar si el click fue en el logo
               if (e.originalEvent.target.closest('.batman-logo')) {

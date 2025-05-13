@@ -33,14 +33,12 @@ const AlertForm = ({ defaultPosition = FALLBACK_POSITION, onSubmit, onCancel }) 
   const handleSubmit = (e) => {
     e.preventDefault();
     const report = {
-      id: Date.now(),
-      position,
-      address: currentAddress,
-      description,
-      type: alertType,
-      date: new Date().toLocaleString(),
+      position, // { lat, lng }
+      referencia: description, // Lo que el usuario escribió en "Puntos de Referencia"
+      direccion: currentAddress // Dirección obtenida del geocoding
     };
     onSubmit(report);
+    onCancel(); // Envía los datos al componente padre (Reportar.jsx)
   };
 
   // Obtiene la dirección al cambiar la posición
@@ -65,7 +63,7 @@ const AlertForm = ({ defaultPosition = FALLBACK_POSITION, onSubmit, onCancel }) 
     setIsLocating(true); // Indica que se está buscando la ubicación
 
     const geolocationOptions = {
-      enableHighAccuracy: true, // Mayor precisión (puede tardar más)
+      enableHighAccuracy: true, // Mayor precisión 
       timeout: 5000, // Máximo 5 segundos de espera
       maximumAge: 0, // No usar caché de ubicaciones anteriores
     };

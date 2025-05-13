@@ -4,6 +4,7 @@ import './Reportar.css';
 import AlertForm from './AlertForm'; 
 import CameraComponent from './CamaraComponent';
 
+
 const Reportar = () => {
   // Estados existentes
   const [media, setMedia] = useState(null);
@@ -23,6 +24,7 @@ const Reportar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [showCamera, setShowCamera] = useState(false);
+  const [currentAddress, setCurrentAddress] = useState('');
   
 
   // Efecto para ocultar el mensaje de éxito después de 3 segundos
@@ -157,6 +159,17 @@ const Reportar = () => {
     }
   };
 
+  
+  const handleAlertFormSubmit = (datosUbicacion) => {
+    setUbicacion({
+      lat: datosUbicacion.position.lat,
+      lng: datosUbicacion.position.lng,
+      referencia: datosUbicacion.referencia,
+      direccion: datosUbicacion.direccion
+    });
+    setCurrentAddress(datosUbicacion.direccion); // Actualiza la dirección
+  };
+
   return (
     <div className="reportar-container">
       {/* Encabezado claro y descriptivo */}
@@ -190,21 +203,22 @@ const Reportar = () => {
           
           {ubicacion && (
             <div className="location-section">
-              <div className="mini-map">
-                {/* Aquí iría un componente de mapa miniaturizado */}
-                <div className="map-placeholder">
-                  <i className="icon-map"></i>
-                </div>
-              </div>
+
               <div className="location-details">
                 <p className="coordinates">
                   <strong>Coordenadas:</strong> {ubicacion.lat.toFixed(4)}, {ubicacion.lng.toFixed(4)}
+                </p>
+                <p className="address">
+                  <strong>Dirección:</strong> {ubicacion.direccion}
                 </p>
                 {ubicacion.referencia && (
                   <p className="reference">
                     <strong>Referencia:</strong> {ubicacion.referencia}
                   </p>
                 )}
+                <button onClick={handleOpenAlertForm} className="edit-location-btn">
+                  <i className="icon-edit"></i> Editar
+                </button>
               </div>
             </div>
           )}
@@ -418,9 +432,9 @@ const Reportar = () => {
       </div>
       {/* Mostrar AlertForm solo si showAlertForm es true */}
       {showAlertForm && (
-        <AlertForm
-          onSubmit={handleSubmitAlert}
-          onCancel={handleCancel} // Pasa la función de cancelar
+        <AlertForm 
+          onSubmit={handleAlertFormSubmit} 
+          onCancel={() => setShowAlertForm(false)}
         />
       )}
     </div>
