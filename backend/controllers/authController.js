@@ -242,6 +242,70 @@ const getReportes = async (req, res) => {
 
 
 
+const createComentario = async (req, res) => {
+  const { id: reporte_id } = req.params;
+  const usuario_id = req.user.id; // del token
+  const { texto } = req.body;
+
+  if (!texto) {
+    return res.status(400).json({ error: 'El comentario no puede estar vacío' });
+  }
+
+  try {
+    const result = await pool.query(
+      `INSERT INTO comentarios (reporte_id, usuario_id, texto)
+       VALUES ($1, $2, $3)
+       RETURNING id, texto, creado_en`,
+      [reporte_id, usuario_id, texto]
+    );
+
+    res.status(201).json({
+      mensaje: 'Comentario creado con éxito',
+      comentario: result.rows[0],
+    });
+  } catch (err) {
+    console.error('Error al crear comentario:', err);
+    res.status(500).json({ error: 'Error al crear comentario' });
+  }
+};
+
+const crearReaccion = async (req, res) => {
+  const { id: reporte_id } = req.params;
+  const usuario_id = req.user.id;
+  const { tipo } = req.body;
+
+  const tiposValidos = ['confirm', 'deny', 'care', 'emergency'];
+
+  if (!tiposValidos.includes(tipo)) {
+    return res.status(400).json({ error: 'Tipo de reacción inválido' });
+  }
+
+  try {
+    const result = await pool.query(
+      `INSERT INTO reacciones (reporte_id, usuario_id, tipo)
+       VALUES ($1, $2, $3)
+       ON CONFLICT (reporte_id, usuario_id, tipo)
+       DO NOTHING
+       RETURNING id, tipo, creado_en`,
+      [reporte_id, usuario_id, tipo]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(200).json({ mensaje: 'Ya habías reaccionado con ese tipo' });
+    }
+
+    res.status(201).json({
+      mensaje: 'Reacción registrada',
+      reaccion: result.rows[0],
+    });
+  } catch (err) {
+    console.error('Error al registrar reacción:', err);
+    res.status(500).json({ error: 'Error al registrar reacción' });
+  }
+};
+
+
+
 // Actualizar module.exports
 module.exports = { 
   register, 
@@ -250,7 +314,9 @@ module.exports = {
   authenticateToken,
   createReport,
   uploadFile,
-  
+  getReportes,
+  createComentario,
+  crearReaccion,
 };
 
 

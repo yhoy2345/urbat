@@ -2,10 +2,23 @@ const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
 const fs = require('fs');
-const path = require('path'); // Añade esto para usar path.extname
+const path = require('path');
 const app = express();
 
-// Configuración de Multer (asegúrate de tener esto)
+// 1. Importar controladores
+const {
+  authenticateToken,
+  register,
+  login,
+  getProfile,
+  createReport,
+  uploadFile,
+  getReportes,
+  createComentario,
+  crearReaccion
+} = require('./controllers/authController');
+
+// 2. Configuración de Multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/');
@@ -29,12 +42,12 @@ const upload = multer({
   }
 });
 
-// 2. Crear carpeta uploads si no existe
+// 3. Crear carpeta uploads si no existe
 if (!fs.existsSync('uploads')) {
   fs.mkdirSync('uploads', { recursive: true });
 }
 
-// 3. Middlewares
+// 4. Middlewares
 app.use(cors({
   origin: 'http://localhost:3000',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -44,23 +57,19 @@ app.use(cors({
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// 4. Importar controladores
-const authController = require('./controllers/authController');
+// 5. Rutas de autenticación y perfil
+app.post('/api/auth/register', register);
+app.post('/api/auth/login', login);
+app.get('/api/auth/profile', authenticateToken, getProfile);
 
-// 5. Rutas
-app.post('/api/auth/register', authController.register);
-app.post('/api/auth/login', authController.login);
-app.get('/api/auth/profile', authController.authenticateToken, authController.getProfile);
+// 6. Rutas de reportes
 app.get('/api/reportes', authenticateToken, getReportes);
+app.post('/api/reportes', authenticateToken, createReport);
+app.post('/api/reportes/:id/archivos', authenticateToken, upload.single('archivo'), uploadFile);
+app.post('/api/reportes/:id/comentarios', authenticateToken, createComentario);
+app.post('/api/reportes/:id/reacciones', authenticateToken, crearReaccion);
 
-app.post('/api/reportes', authController.authenticateToken, authController.createReport);
-app.post('/api/reportes/:id/archivos', 
-  authController.authenticateToken, 
-  upload.single('archivo'), 
-  authController.uploadFile
-);
-
-// 6. Manejo de errores mejorado
+// 7. Manejo de errores
 app.use((err, req, res, next) => {
   console.error(err.stack);
   
@@ -70,14 +79,14 @@ app.use((err, req, res, next) => {
       details: err.message 
     });
   }
-  
+
   res.status(500).json({ 
     error: 'Error interno del servidor',
     message: err.message 
   });
 });
 
-// 7. Iniciar servidor
+// 8. Iniciar servidor
 app.listen(5000, () => {
   console.log('Servidor listo en http://localhost:5000');
   console.log('Ruta de uploads:', path.join(__dirname, 'uploads'));

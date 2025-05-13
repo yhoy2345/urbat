@@ -1,11 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
 import CrimePost from './CrimePost';
-import CrimeMap from './CrimeMap'; // Componente de mapa que debes crear
+import CrimeMap from './CrimeMap';
 
 const CrimeFeed = () => {
   const [isReelMode, setIsReelMode] = useState(false);
@@ -16,9 +15,12 @@ const CrimeFeed = () => {
   useEffect(() => {
     const fetchReportes = async () => {
       try {
+        const token = localStorage.getItem('token');
+        if (!token) throw new Error('No autenticado');
+        
         const response = await fetch('http://localhost:5000/api/reportes', {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${token}`
           }
         });
         
@@ -39,14 +41,14 @@ const CrimeFeed = () => {
     fetchReportes();
   }, []);
 
-
-   const transformData = (reportes) => {
+  // Transforma los datos de la API al formato esperado
+  const transformData = (reportes) => {
     return reportes.map(reporte => ({
       id: reporte.id,
       user: {
         id: reporte.usuario_id,
         name: reporte.usuario_nombre,
-        avatar: '/default-avatar.png' // Puedes añadir avatar a tu tabla usuarios
+        avatar: '/default-avatar.png'
       },
       timestamp: formatTime(reporte.creado_en),
       location: reporte.direccion || 'Ubicación no especificada',
@@ -57,13 +59,13 @@ const CrimeFeed = () => {
       } : null,
       text: `${reporte.descripcion}\n${reporte.referencia ? `Referencia: ${reporte.referencia}` : ''}`,
       reactions: {
-        confirm: 0, // Puedes añadir reacciones a tu BD
+        confirm: 0, // Se actualizará con datos reales
         deny: 0,
         care: 0,
         emergency: 0
       },
       comments: reporte.comentarios || [],
-      tags: [`#${reporte.tipo_alerta}`, '#AlertaCiudadana'],
+      tags: [`#${reporte.tipo_alerta}`],
       coordinates: {
         lat: parseFloat(reporte.latitud),
         lng: parseFloat(reporte.longitud)
@@ -71,7 +73,6 @@ const CrimeFeed = () => {
     }));
   };
 
-  // Función para formatear la fecha
   const formatTime = (timestamp) => {
     const now = new Date();
     const postDate = new Date(timestamp);
@@ -87,67 +88,45 @@ const CrimeFeed = () => {
     return `Hace ${Math.floor(diff / day)} días`;
   };
 
-  if (loading) return <div style={styles.loading}>Cargando reportes...</div>;
-  if (error) return <div style={styles.error}>Error: {error}</div>;
-
-
+  if (loading) return <div className="loading">Cargando reportes...</div>;
+  if (error) return <div className="error">Error: {error}</div>;
 
   return (
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: isReelMode ? '1fr' : 'minmax(0, 600px) 300px',
-      gap: 'var(--spacing-md)',
-      maxWidth: '1200px',
-      margin: '0 auto',
-      padding: 'var(--spacing-md)'
-    }}>
-      <div>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: 'var(--spacing-md)'
-        }}>
-          <h2 style={{ color: 'var(--urbat-white)' }}>Alertas Recientes</h2>
-          <button 
-            onClick={() => setIsReelMode(!isReelMode)} 
-            style={{
-              background: 'var(--urbat-glass)',
-              border: '1px solid var(--urbat-border)',
-              color: 'var(--urbat-white)',
-              padding: '8px 16px',
-              borderRadius: '20px',
-              cursor: 'pointer'
-            }}
-          >
-            {isReelMode ? 'Modo Lista' : 'Modo Reel'}
-          </button>
-        </div>
-
-        {isReelMode ? (
-          <Swiper
-            direction="vertical"
-            slidesPerView={1}
-            spaceBetween={0}
-            mousewheel
-            style={{ height: '90vh' }}
-          >
-            {posts.map(post => (
-              <SwiperSlide key={post.id}>
-                <CrimePost post={post} isReelMode={true} />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        ) : (
-          posts.map(post => (
-            <CrimePost key={post.id} post={post} />
-          ))
-        )}
+    <div className={`crime-feed ${isReelMode ? 'reel-mode' : ''}`}>
+      <div className="feed-header">
+        <h2>Alertas Recientes</h2>
+        <button 
+          onClick={() => setIsReelMode(!isReelMode)}
+          className="mode-toggle"
+        >
+          {isReelMode ? 'Modo Lista' : 'Modo Reel'}
+        </button>
       </div>
 
-      {!isReelMode && (
-        <div style={{ position: 'sticky', top: '20px', height: 'fit-content' }}>
-          <CrimeMap posts={posts} />
+      {isReelMode ? (
+        <Swiper
+          direction="vertical"
+          slidesPerView={1}
+          spaceBetween={0}
+          mousewheel
+          className="reel-container"
+        >
+          {posts.map(post => (
+            <SwiperSlide key={post.id}>
+              <CrimePost post={post} isReelMode={true} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      ) : (
+        <div className="feed-container">
+          <div className="posts-list">
+            {posts.map(post => (
+              <CrimePost key={post.id} post={post} />
+            ))}
+          </div>
+          <div className="map-sidebar">
+            <CrimeMap posts={posts} />
+          </div>
         </div>
       )}
     </div>

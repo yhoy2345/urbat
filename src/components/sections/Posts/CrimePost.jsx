@@ -11,26 +11,69 @@ SwiperCore.use([Navigation, Pagination, Thumbs]);
 const CrimePost = ({ post, isReelMode = false }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
-  const [showFullscreen, setShowFullscreen] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [reactions, setReactions] = useState(post.reactions);
+  const [newComment, setNewComment] = useState('');
+  const [comments, setComments] = useState(post.comments);
   const videoRef = useRef(null);
-  const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
-  const handleReaction = (type) => {
-    setReactions(prev => ({
-      ...prev,
-      [type]: prev[type] + 1
-    }));
+
+  const handleReaction = async (type) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`http://localhost:5000/api/reportes/${post.id}/reacciones`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ tipo: type })
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al registrar reacción');
+      }
+
+      const data = await response.json();
+      setReactions(prev => ({
+        ...prev,
+        [type]: data.reaccion ? prev[type] + 1 : Math.max(0, prev[type] - 1)
+      }));
+    } catch (err) {
+      console.error('Error:', err);
+    }
+  };
+
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault();
+    if (!newComment.trim()) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`http://localhost:5000/api/reportes/${post.id}/comentarios`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ texto: newComment })
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al enviar comentario');
+      }
+
+      const data = await response.json();
+      setComments(prev => [data.comentario, ...prev]);
+      setNewComment('');
+    } catch (err) {
+      console.error('Error:', err);
+    }
   };
 
   const togglePlay = () => {
     if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
-      }
+      isPlaying ? videoRef.current.pause() : videoRef.current.play();
       setIsPlaying(!isPlaying);
     }
   };
@@ -42,7 +85,7 @@ const CrimePost = ({ post, isReelMode = false }) => {
     }
   };
 
-  // Efecto para pausar video cuando no está en vista
+  // Pausar video cuando no está visible
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -56,209 +99,168 @@ const CrimePost = ({ post, isReelMode = false }) => {
       { threshold: 0.5 }
     );
 
-    if (videoRef.current) {
-      observer.observe(videoRef.current);
-    }
+    if (videoRef.current) observer.observe(videoRef.current);
 
     return () => {
-      if (videoRef.current) {
-        observer.unobserve(videoRef.current);
-      }
+      if (videoRef.current) observer.unobserve(videoRef.current);
     };
   }, [isPlaying]);
 
   return (
-    <div className={`crime-post ${isReelMode ? 'reel-mode' : ''}`} style={styles.post}>
-      {/* Cabecera */}
-      <div style={styles.postHeader}>
-        <div style={styles.userInfo}>
+    <div className={`crime-post ${isReelMode ? 'reel-mode' : ''}`}>
+      {/* Cabecera del post */}
+      <div className="post-header">
+        <div className="user-info">
           <img 
-            src={post.user.avatar || '/default-avatar.png'} 
+            src={post.user.avatar} 
             alt="Avatar" 
-            style={styles.avatar}
+            className="avatar"
           />
           <div>
-            <p style={styles.username}>{post.user.name || 'Anónimo'}</p>
-            <div style={styles.postMeta}>
-              <span style={styles.timestamp}>{post.timestamp}</span>
-              <span style={styles.locationTag}>{post.location}</span>
+            <p className="username">{post.user.name}</p>
+            <div className="post-meta">
+              <span className="timestamp">{post.timestamp}</span>
+              <span className="location">{post.location}</span>
             </div>
           </div>
         </div>
-        <button style={styles.moreButton}>···</button>
+        <button className="more-button">···</button>
       </div>
 
       {/* Contenido multimedia */}
-      <div style={styles.mediaContainer}>
-        {post.media.type === 'video' ? (
-          <div style={styles.videoWrapper}>
-            <video
-              ref={videoRef}
-              src={post.media.url}
-              loop
-              muted={isMuted}
-              style={styles.video}
-              onClick={togglePlay}
-            />
-            {!isPlaying && (
-              <div style={styles.playOverlay} onClick={togglePlay}>
-                <svg style={styles.playIcon} viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z" fill="white" />
-                </svg>
+      {post.media ? (
+        <div className="media-container">
+          {post.media.type === 'video' ? (
+            <div className="video-wrapper">
+              <video
+                ref={videoRef}
+                src={post.media.url}
+                loop
+                muted={isMuted}
+                className="video"
+                onClick={togglePlay}
+              />
+              {!isPlaying && (
+                <div className="play-overlay" onClick={togglePlay}>
+                  <svg className="play-icon" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z" fill="white" />
+                  </svg>
+                </div>
+              )}
+              <div className="video-controls">
+                <button onClick={toggleMute} className="control-button">
+                  {isMuted ? '🔇' : '🔊'}
+                </button>
+                <button 
+                  onClick={() => setShowComments(!showComments)} 
+                  className="control-button"
+                >
+                  💬 {comments.length}
+                </button>
               </div>
-            )}
-            <div style={styles.videoControls}>
-              <button onClick={toggleMute} style={styles.controlButton}>
-                {isMuted ? '🔇' : '🔊'}
-              </button>
-              <button 
-                onClick={() => setShowComments(!showComments)} 
-                style={styles.controlButton}
-              >
-                💬
-              </button>
             </div>
-          </div>
-        ) : (
-          <div style={styles.imageCarousel}>
+          ) : (
             <Swiper
-              spaceBetween={0}
-              slidesPerView={1}
-              pagination={{ clickable: true }}
+              modules={[Navigation, Pagination]}
               navigation
-              thumbs={{ swiper: thumbsSwiper }}
+              pagination={{ clickable: true }}
+              className="image-swiper"
             >
               {post.media.urls.map((url, index) => (
                 <SwiperSlide key={index}>
-                  <img src={url} alt={`Media ${index}`} style={styles.postImage} />
+                  <img src={url} alt={`Media ${index}`} className="post-image" />
                 </SwiperSlide>
               ))}
             </Swiper>
-            <div style={styles.carouselThumbs}>
-              <Swiper
-                onSwiper={setThumbsSwiper}
-                spaceBetween={5}
-                slidesPerView={4}
-                freeMode
-                watchSlidesProgress
-              >
-                {post.media.urls.map((url, index) => (
-                  <SwiperSlide key={index}>
-                    <img src={url} alt={`Thumb ${index}`} style={styles.thumbImage} />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      ) : (
+        <div className="no-media">
+          <p>Reporte sin multimedia</p>
+        </div>
+      )}
 
-      {/* Texto descriptivo */}
-      <div style={styles.postContent}>
-        <p style={styles.postText}>
-          {post.text.split(/(#[^\s]+)/g).map((part, i) => 
-            part.startsWith('#') ? (
-              <span key={i} style={styles.hashtag}>{part}</span>
+      {/* Texto del post */}
+      <div className="post-content">
+        <p className="post-text">
+          {post.text.split(' ').map((word, i) => 
+            word.startsWith('#') ? (
+              <span key={i} className="hashtag">{word}</span>
             ) : (
-              part
+              word + ' '
             )
           )}
         </p>
       </div>
 
-      {/* Barra de reacciones */}
-      <div style={styles.reactionsBar}>
+      {/* Reacciones */}
+      <div className="reactions-bar">
         <button 
           onClick={() => handleReaction('confirm')} 
-          style={styles.reactionButton}
+          className={`reaction-button ${reactions.confirm > 0 ? 'active' : ''}`}
         >
           👍 <span>{reactions.confirm}</span>
         </button>
         <button 
           onClick={() => handleReaction('deny')} 
-          style={styles.reactionButton}
+          className={`reaction-button ${reactions.deny > 0 ? 'active' : ''}`}
         >
           👎 <span>{reactions.deny}</span>
         </button>
         <button 
           onClick={() => handleReaction('care')} 
-          style={styles.reactionButton}
+          className={`reaction-button ${reactions.care > 0 ? 'active' : ''}`}
         >
           ❤️ <span>{reactions.care}</span>
         </button>
         <button 
           onClick={() => handleReaction('emergency')} 
-          style={{ ...styles.reactionButton, color: 'red' }}
+          className={`reaction-button ${reactions.emergency > 0 ? 'emergency' : ''}`}
         >
           ⛑️ <span>{reactions.emergency}</span>
         </button>
-        <button style={styles.reactionButton}>
-          🔗 <span>Compartir</span>
-        </button>
       </div>
 
-      {/* Zona de comentarios */}
-      <div style={styles.commentsSection}>
-        {post.comments.slice(0, showComments ? undefined : 2).map(comment => (
-          <div key={comment.id} style={styles.comment}>
+      {/* Comentarios */}
+      <div className={`comments-section ${showComments ? 'expanded' : ''}`}>
+        {comments.slice(0, showComments ? undefined : 2).map(comment => (
+          <div key={comment.id} className="comment">
             <img 
-              src={comment.user.avatar || '/default-avatar.png'} 
+              src={comment.usuario_avatar || '/default-avatar.png'} 
               alt="Avatar" 
-              style={styles.commentAvatar}
+              className="comment-avatar"
             />
-            <div>
-              <p style={styles.commentUsername}>{comment.user.name}</p>
-              <p style={styles.commentText}>{comment.text}</p>
-              <p style={styles.commentTime}>{comment.timestamp}</p>
+            <div className="comment-content">
+              <p className="comment-username">{comment.usuario_nombre}</p>
+              <p className="comment-text">{comment.texto}</p>
+              <p className="comment-time">{new Date(comment.creado_en).toLocaleString()}</p>
+
             </div>
           </div>
         ))}
-        {post.comments.length > 2 && !showComments && (
+        
+        {comments.length > 2 && !showComments && (
           <button 
             onClick={() => setShowComments(true)} 
-            style={styles.viewAllComments}
+            className="view-comments"
           >
-            Ver todos los comentarios ({post.comments.length})
+            Ver todos los comentarios ({comments.length})
           </button>
         )}
-        <div style={styles.addComment}>
-          <input 
-            type="text" 
-            placeholder="Añade un comentario..." 
-            style={styles.commentInput}
+
+        <form onSubmit={handleCommentSubmit} className="add-comment">
+          <input
+            type="text"
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            placeholder="Añade un comentario..."
+            className="comment-input"
           />
-          <button style={styles.sendCommentButton}>➤</button>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div style={styles.postFooter}>
-        <button style={styles.footerButton}>🗺️ Ver en mapa</button>
-        <button style={styles.footerButton}>🔖 Guardar</button>
-        <div style={styles.hashtags}>
-          {post.tags.map(tag => (
-            <span key={tag} style={styles.tag}>#{tag}</span>
-          ))}
-        </div>
-      </div>
-
-      {/* Modal de pantalla completa */}
-      {showFullscreen && (
-        <div style={styles.fullscreenModal}>
-          <button 
-            onClick={() => setShowFullscreen(false)} 
-            style={styles.closeModalButton}
-          >
-            ✕
+          <button type="submit" className="send-comment">
+            Enviar
           </button>
-          <video
-            src={post.media.url}
-            controls
-            autoPlay
-            style={styles.fullscreenVideo}
-          />
-        </div>
-      )}
+        </form>
+      </div>
     </div>
   );
 };
