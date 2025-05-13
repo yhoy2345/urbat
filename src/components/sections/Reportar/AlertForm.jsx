@@ -29,57 +29,17 @@ const AlertForm = ({ defaultPosition = FALLBACK_POSITION, onSubmit, onCancel }) 
     }
   };
 
-// Modifica handleSubmit en AlertForm.js
-const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  try {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('Debes iniciar sesión para reportar');
-    }
-
+  // Envía el reporte
+  const handleSubmit = (e) => {
+    e.preventDefault();
     const report = {
-      tipo_alerta: alertType,
-      descripcion: description,
-      referencia: description,
-      direccion: currentAddress || 'Dirección no especificada',
-      latitud: position.lat,
-      longitud: position.lng
+      position, // { lat, lng }
+      referencia: description, // Lo que el usuario escribió en "Puntos de Referencia"
+      direccion: currentAddress // Dirección obtenida del geocoding
     };
-
-    const response = await fetch('http://localhost:5000/api/reportes', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(report)
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Error al guardar el reporte');
-    }
-
-    const data = await response.json();
-    
-    if (onSubmit) {
-      onSubmit({
-        position: { lat: position.lat, lng: position.lng },
-        referencia: description,
-        direccion: currentAddress,
-        reporteId: data.reporte.id // Añadimos el ID para posibles usos futuros
-      });
-    }
-    
-    onCancel();
-  } catch (err) {
-    console.error(err);
-    alert(err.message);
-  }
-};
-
+    onSubmit(report);
+    onCancel(); // Envía los datos al componente padre (Reportar.jsx)
+  };
 
   // Obtiene la dirección al cambiar la posición
   useEffect(() => {

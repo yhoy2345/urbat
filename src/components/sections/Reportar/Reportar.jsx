@@ -44,19 +44,6 @@ const Reportar = () => {
     }
   }, [location.state]);
 
-  const handleMediaChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
-        setMedia(URL.createObjectURL(file));
-        setMediaType(file.type.startsWith('image/') ? 'image' : 'video');
-        setError('');
-      } else {
-        setError('Por favor, sube solo imágenes o videos');
-      }
-    }
-  };
-
   const openCamera = () => {
     setShowCamera(true);
   };
@@ -66,11 +53,7 @@ const Reportar = () => {
   };  
 
 
-  const handleCapture = (dataUrl) => {
-    setMedia(dataUrl);
-    setMediaType('image');
-    setShowCamera(false);
-  };
+
 
   const handleElegirUbicacion = () => {
     navigate('/Reportar-form', {
@@ -124,73 +107,150 @@ const Reportar = () => {
     setReportesRecientes(mockReportes);
   }, [location]);
 
+
+
+
+
+const handleMediaChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
+      setMedia(file);
+      setMediaType(file.type.startsWith('image/') ? 'image' : 'video');
+    } else {
+      setError('Por favor, selecciona solo imágenes o videos');
+    }
+  }
+};
+
+const handleCapture = async (dataUrl, type = 'image') => {
+  try {
+    const response = await fetch(dataUrl);
+    const blob = await response.blob();
+    
+    const fileExtension = type === 'image' ? 'jpg' : 'mp4';
+    const mimeType = type === 'image' ? 'image/jpeg' : 'video/mp4';
+    
+    const file = new File([blob], `captura.${fileExtension}`, { type: mimeType });
+    
+    setMedia(file);
+    setMediaType(type);
+  } catch (err) {
+    console.error('Error al procesar captura:', err);
+    setError('Error al procesar la captura');
+  }
+};
+
+
+
+  
   // Modifica la función handleSubmit en Reportar.jsx
 const handleSubmit = async (e) => {
   e.preventDefault();
   
-    if (!tipoAlerta || !descripcion || !ubicacion) {
-      setError('Por favor, completa todos los campos obligatorios');
-      return;
-    }
+  try {
+    setIsSubmitting(true);
+    setError('');
+
+    // Debug: Verifica el objeto media
+    console.log('Media object:', media);
+    console.log('Is File:', media instanceof File);
+    console.log('Is Blob:', media instanceof Blob);
+
+
+
+
+
     
-    try {
-      setIsSubmitting(true);
-      setError('');
-      
-      // 1. Crear el reporte
-      const reportResponse = await fetch('http://localhost:5000/api/reportes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
-          tipo_alerta: tipoAlerta,
-          descripcion: descripcion,
-          referencia: descripcion,
-          direccion: ubicacion.direccion || 'Dirección no especificada',
-          latitud: ubicacion.lat,
-          longitud: ubicacion.lng
-        })
-      });
-      
-      if (!reportResponse.ok) {
-        const errorData = await reportResponse.json();
-        throw new Error(errorData.error || 'Error al crear el reporte');
+    // 1. Crear reporte primero
+    const reportResponse = await fetch('http://localhost:5000/api/reportes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify({
+        tipo_alerta: tipoAlerta,
+        descripcion: descripcion,
+        direccion: ubicacion.direccion || 'Dirección no disponible',
+        latitud: ubicacion.lat,
+        longitud: ubicacion.lng
+      })
+    });
+
+   // Verificar respuesta del servidor
+    if (!reportResponse.ok) {
+      const errorData = await reportResponse.json();
+      throw new Error(errorData.message || 'Error al crear reporte');
+    }
+
+    const reportData = await reportResponse.json();
+    
+    // Debug: Verificar estructura de la respuesta
+    console.log('Respuesta del servidor:', reportData);
+    
+    // 3. Obtener ID del reporte (con manejo seguro)
+    const reportId = reportData.id || reportData.reporte?.id;
+    if (!reportId) {
+      throw new Error('No se recibió el ID del reporte creado');
+    }
+
+    // 4. Subir archivo si existe
+    if (media) {
+      const formData = new FormData();
+      let fileToUpload;
+
+      // Conversión segura a File
+      if (media instanceof File) {
+        fileToUpload = media;
+      } else if (media instanceof Blob) {
+        fileToUpload = new File([media], 'archivo.mp4', { type: media.type });
+      } else if (typeof media === 'string' && media.startsWith('data:')) {
+        const response = await fetch(media);
+        const blob = await response.blob();
+        fileToUpload = new File([blob], 'captura.mp4', { type: 'video/mp4' });
+      } else {
+        throw new Error('Formato de archivo no soportado');
       }
 
-      const reportData = await reportResponse.json();
-      const reportId = reportData.reporte.id;
-      
-      // 2. Subir archivo si existe
-      if (media) {
-        const formData = new FormData();
-        formData.append('archivo', media);
-        
-        const fileResponse = await fetch(`http://localhost:5000/api/reportes/${reportId}/archivos`, {
+      // Usar el nombre original para videos
+      const fileName = fileToUpload.type.startsWith('video/') 
+        ? fileToUpload.name || 'video.mp4'
+        : 'imagen.jpg';
+
+      formData.append('archivo', fileToUpload, fileName);
+
+      const fileResponse = await fetch(
+        `http://localhost:5000/api/reportes/${reportId}/archivos`, 
+        {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           },
           body: formData
-        });
-        
-        if (!fileResponse.ok) {
-          const errorData = await fileResponse.json();
-          throw new Error(errorData.error || 'Error al subir archivo');
         }
+      );
+
+      if (!fileResponse.ok) {
+        const errorData = await fileResponse.json();
+        throw new Error(errorData.message || 'Error al subir archivo');
       }
-      
-      setReporteExitoso(true);
-      resetForm();
-      
-    } catch (err) {
-      console.error('Error:', err);
-      setError(err.message);
-    } finally {
-      setIsSubmitting(false);
+
+      // Debug: Verificar respuesta del archivo
+      const fileData = await fileResponse.json();
+      console.log('Archivo subido:', fileData);
     }
-  };
+
+    setReporteExitoso(true);
+    resetForm();
+
+  } catch (err) {
+    console.error('Error en handleSubmit:', err);
+    setError(err.message || 'Error al enviar reporte');
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   const resetForm = () => {
     setMedia(null);

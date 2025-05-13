@@ -1,6 +1,8 @@
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
+const path = require('path');
 
 const pool = new Pool({
   user: 'postgres',
@@ -97,20 +99,15 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-// Modifica el module.exports para incluir getProfile y authenticateToken
-module.exports = { 
-  register, 
-  login, 
-  getProfile,
-  authenticateToken
-};
 
 
-// Crear un nuevo reporte
+// En authController.js, modifica createReport:
 const createReport = async (req, res) => {
   try {
-    const userId = req.userId; // Obtenido del middleware
-    const { usuario_id, tipo_alerta, descripcion, referencia, direccion, latitud, longitud } = req.body;
+    console.log('Datos recibidos:', req.body); // Debug
+    console.log('Usuario autenticado ID:', req.userId); // Debug
+
+    const { tipo_alerta, descripcion, referencia, direccion, latitud, longitud } = req.body;
     
     const result = await pool.query(
       `INSERT INTO reportes (
@@ -122,13 +119,16 @@ const createReport = async (req, res) => {
         latitud, 
         longitud
       ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-      [usuario_id, tipo_alerta, descripcion, referencia, direccion, latitud, longitud]
+      [req.userId, tipo_alerta, descripcion, referencia, direccion, latitud, longitud] // Usa req.userId
     );
     
     res.status(201).json({ reporte: result.rows[0] });
   } catch (err) {
-    console.error('Error al crear reporte:', err);
-    res.status(500).json({ error: 'Error al crear reporte' });
+    console.error('Error detallado:', err); // Debug detallado
+    res.status(500).json({ 
+      error: 'Error al crear reporte',
+      detalle: err.message // Envía el mensaje de error real
+    });
   }
 };
 
@@ -136,22 +136,50 @@ const createReport = async (req, res) => {
 const uploadFile = async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ error: 'No se proporcionó archivo' });
+      return res.status(400).json({
+        success: false,
+        message: 'No se proporcionó ningún archivo'
+      });
     }
+
+    console.log('Archivo recibido:', {
+      originalname: req.file.originalname,
+      mimetype: req.file.mimetype,
+      size: req.file.size,
+      filename: req.file.filename
+    });
+
+    const fileUrl = `/uploads/${req.file.filename}`;
     
     const result = await pool.query(
-      `INSERT INTO archivos (
-        reporte_id, 
-        archivo_url, 
-        archivo_tipo
-      ) VALUES ($1, $2, $3) RETURNING *`,
-      [req.params.id, req.file.path, req.file.mimetype.startsWith('image') ? 'imagen' : 'video']
+      `INSERT INTO archivos (reporte_id, archivo_url, archivo_tipo)
+       VALUES ($1, $2, $3) RETURNING *`,
+      [
+        req.params.id,
+        fileUrl,
+        req.file.mimetype.startsWith('image') ? 'imagen' : 'video'
+      ]
     );
-    
-    res.status(201).json({ archivo: result.rows[0] });
+
+    res.status(201).json({
+      success: true,
+      message: 'Archivo subido correctamente',
+      file: result.rows[0]
+    });
+
   } catch (err) {
-    console.error('Error al subir archivo:', err);
-    res.status(500).json({ error: 'Error al subir archivo' });
+    console.error('Error en uploadFile:', err);
+    
+    // Limpieza en caso de error
+    if (req.file && fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path);
+    }
+
+    res.status(500).json({
+      success: false,
+      message: 'Error al procesar el archivo',
+      error: err.message
+    });
   }
 };
 
@@ -163,10 +191,8 @@ module.exports = {
   authenticateToken,
   createReport,
   uploadFile,
-  pool // Exportamos el pool para reutilizarlo
+  
 };
 
 
 
-
-module.exports = { register, login };
