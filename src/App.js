@@ -12,6 +12,8 @@
   import Perfil from './components/sections/Perfil/Perfil'; 
   import ReportarForm from './components/sections/Reportar/AlertForm';
   import CrimeFeed from './components/sections/Posts/CrimeFeed';
+  import AboutUs from './components/sections/Nosotros/AboutUs';
+
   import 'leaflet/dist/leaflet.css';
   import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css';
   import 'leaflet-defaulticon-compatibility';
@@ -34,8 +36,9 @@
             <Route path="reportar" element={<Reportar />} />
             <Route path="reportar-form" element={<ReportarForm />} />
             <Route path="perfil" element={<Perfil />} />
-            
             <Route path="posts" element={<CrimeFeed />} />
+            <Route path="nosotros" element={<AboutUs />} />
+
             
             
             {/* Ruta para manejar páginas no encontradas (opcional) */}
