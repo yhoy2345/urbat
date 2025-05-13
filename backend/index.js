@@ -51,6 +51,7 @@ const authController = require('./controllers/authController');
 app.post('/api/auth/register', authController.register);
 app.post('/api/auth/login', authController.login);
 app.get('/api/auth/profile', authController.authenticateToken, authController.getProfile);
+app.get('/api/reportes', authenticateToken, getReportes);
 
 app.post('/api/reportes', authController.authenticateToken, authController.createReport);
 app.post('/api/reportes/:id/archivos', 

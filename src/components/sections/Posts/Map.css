@@ -1,0 +1,74 @@
+.crime-map-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .custom-marker {
+    position: relative;
+    text-align: center;
+  }
+  
+  .marker-pin {
+    width: 30px;
+    height: 30px;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: -15px 0 0 -15px;
+  }
+  
+  .marker-label {
+    position: relative;
+    z-index: 1;
+    font-size: 14px;
+    line-height: 30px;
+  }
+  
+  .custom-marker.danger .marker-pin {
+    background: #ff4444;
+    border: 2px solid #cc0000;
+  }
+  
+  .custom-marker.info .marker-pin {
+    background: #33b5e5;
+    border: 2px solid #0099cc;
+  }
+  
+  .map-legend {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+  }
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+  }
+  
+  .marker-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+  
+  .marker-icon.danger {
+    background: #ff4444;
+  }
+  
+  .marker-icon.info {
+    background: #33b5e5;
+  }
