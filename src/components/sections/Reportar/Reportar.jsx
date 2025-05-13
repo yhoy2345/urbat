@@ -124,10 +124,11 @@ const Reportar = () => {
     setReportesRecientes(mockReportes);
   }, [location]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (!media || !tipoAlerta || !descripcion || !ubicacion) {
+  // Modifica la función handleSubmit en Reportar.jsx
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+    if (!tipoAlerta || !descripcion || !ubicacion) {
       setError('Por favor, completa todos los campos obligatorios');
       return;
     }
@@ -136,27 +137,67 @@ const Reportar = () => {
       setIsSubmitting(true);
       setError('');
       
-      // Simular envío a API (en una app real aquí iría la llamada real)
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // 1. Crear el reporte
+      const reportResponse = await fetch('http://localhost:5000/api/reportes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          tipo_alerta: tipoAlerta,
+          descripcion: descripcion,
+          referencia: descripcion,
+          direccion: ubicacion.direccion || 'Dirección no especificada',
+          latitud: ubicacion.lat,
+          longitud: ubicacion.lng
+        })
+      });
       
-      // Mostrar mensaje de éxito
+      if (!reportResponse.ok) {
+        const errorData = await reportResponse.json();
+        throw new Error(errorData.error || 'Error al crear el reporte');
+      }
+
+      const reportData = await reportResponse.json();
+      const reportId = reportData.reporte.id;
+      
+      // 2. Subir archivo si existe
+      if (media) {
+        const formData = new FormData();
+        formData.append('archivo', media);
+        
+        const fileResponse = await fetch(`http://localhost:5000/api/reportes/${reportId}/archivos`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: formData
+        });
+        
+        if (!fileResponse.ok) {
+          const errorData = await fileResponse.json();
+          throw new Error(errorData.error || 'Error al subir archivo');
+        }
+      }
+      
       setReporteExitoso(true);
-      
-      // Resetear formulario
-      setMedia(null);
-      setMediaType('');
-      setTipoAlerta('');
-      setDescripcion('');
-      setUbicacion(null);
-      
-      // Aquí podrías actualizar la lista de reportes recientes
-      // con el nuevo reporte enviado
+      resetForm();
       
     } catch (err) {
-      setError('Error al enviar el reporte. Por favor intenta nuevamente.');
+      console.error('Error:', err);
+      setError(err.message);
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const resetForm = () => {
+    setMedia(null);
+    setMediaType('');
+    setTipoAlerta('');
+    setDescripcion('');
+    setUbicacion(null);
   };
 
   

@@ -105,4 +105,68 @@ module.exports = {
   authenticateToken
 };
 
+
+// Crear un nuevo reporte
+const createReport = async (req, res) => {
+  try {
+    const userId = req.userId; // Obtenido del middleware
+    const { usuario_id, tipo_alerta, descripcion, referencia, direccion, latitud, longitud } = req.body;
+    
+    const result = await pool.query(
+      `INSERT INTO reportes (
+        usuario_id, 
+        tipo_alerta, 
+        descripcion, 
+        referencia, 
+        direccion, 
+        latitud, 
+        longitud
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+      [usuario_id, tipo_alerta, descripcion, referencia, direccion, latitud, longitud]
+    );
+    
+    res.status(201).json({ reporte: result.rows[0] });
+  } catch (err) {
+    console.error('Error al crear reporte:', err);
+    res.status(500).json({ error: 'Error al crear reporte' });
+  }
+};
+
+// Subir archivo asociado a un reporte
+const uploadFile = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No se proporcionó archivo' });
+    }
+    
+    const result = await pool.query(
+      `INSERT INTO archivos (
+        reporte_id, 
+        archivo_url, 
+        archivo_tipo
+      ) VALUES ($1, $2, $3) RETURNING *`,
+      [req.params.id, req.file.path, req.file.mimetype.startsWith('image') ? 'imagen' : 'video']
+    );
+    
+    res.status(201).json({ archivo: result.rows[0] });
+  } catch (err) {
+    console.error('Error al subir archivo:', err);
+    res.status(500).json({ error: 'Error al subir archivo' });
+  }
+};
+
+// Actualizar module.exports
+module.exports = { 
+  register, 
+  login, 
+  getProfile,
+  authenticateToken,
+  createReport,
+  uploadFile,
+  pool // Exportamos el pool para reutilizarlo
+};
+
+
+
+
 module.exports = { register, login };
