@@ -14,6 +14,7 @@
   import ReportarForm from './components/sections/Reportar/AlertForm';
   import CrimeFeed from './components/sections/Posts/CrimeFeed';
   import AboutUs from './components/sections/Nosotros/AboutUs';
+  import Contacto from './components/sections/Contacto/Contacto'; 
 
   import 'leaflet/dist/leaflet.css';
   import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css';
@@ -39,6 +40,7 @@ export default function App() {
             <Route path="perfil" element={<Perfil />} />
             <Route path="posts" element={<CrimeFeed />} />
             <Route path="nosotros" element={<AboutUs />} />
+            <Route path="contacto" element={<Contacto />} />
 
             {/* Ruta para páginas no encontradas */}
             <Route path="*" element={<div>Página no encontrada</div>} />

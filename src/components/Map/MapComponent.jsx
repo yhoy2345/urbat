@@ -4,7 +4,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './Map.css';
 import AlertForm from '../sections/Reportar/AlertForm';
-import DraggablePersonMarker from '../sections/Reportar/Marcador';
+import DraggablePersonMarker from './MapMarcador';
 
 // Configuración de iconos para Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
