@@ -187,60 +187,93 @@ const uploadFile = async (req, res) => {
 // En tu authController.js o un nuevo controller
 const getReportes = async (req, res) => {
   try {
-    const result = await pool.query(`
+    const userId = req.userId; // ID del usuario autenticado
+
+    // Obtener reportes con información del usuario
+    const reportesResult = await pool.query(`
       SELECT 
-        r.id,
-        r.tipo_alerta,
-        r.descripcion,
-        r.referencia,
-        r.direccion,
-        r.latitud,
-        r.longitud,
-        r.creado_en,
-        u.id as usuario_id,
+        r.*,
         u.nombre as usuario_nombre,
-        u.email as usuario_email,
-        (
-          SELECT json_agg(
-            json_build_object(
-              'id', a.id,
-              'url', a.archivo_url,
-              'tipo', a.archivo_tipo
-            )
-          ) 
-          FROM archivos a 
-          WHERE a.reporte_id = r.id
-        ) as archivos,
-        (
-          SELECT json_agg(
-            json_build_object(
-              'id', c.id,
-              'usuario_id', c.usuario_id,
-              'usuario_nombre', uc.nombre,
-              'texto', c.texto,
-              'creado_en', c.creado_en
-            )
-          )
-          FROM comentarios c
-          JOIN usuarios uc ON c.usuario_id = uc.id
-          WHERE c.reporte_id = r.id
-          ORDER BY c.creado_en DESC
-          LIMIT 10
-        ) as comentarios
+        u.email as usuario_email
       FROM reportes r
       JOIN usuarios u ON r.usuario_id = u.id
       ORDER BY r.creado_en DESC
       LIMIT 20
     `);
 
-    res.json(result.rows);
+    // Obtener archivos, comentarios, reacciones totales y reacciones del usuario
+    const reportesCompletos = await Promise.all(
+      reportesResult.rows.map(async (reporte) => {
+        const [archivos, comentarios, reaccionesTotales, reaccionesUsuario] = await Promise.all([
+          pool.query(
+            `SELECT id, archivo_url as url, archivo_tipo as tipo, creado_en
+             FROM archivos WHERE reporte_id = $1`,
+            [reporte.id]
+          ),
+          pool.query(
+            `SELECT 
+               c.id,
+               c.usuario_id,
+               u.nombre as usuario_nombre,
+               c.texto,
+               c.creado_en
+             FROM comentarios c
+             JOIN usuarios u ON c.usuario_id = u.id
+             WHERE c.reporte_id = $1
+             ORDER BY c.creado_en DESC
+             LIMIT 10`,
+            [reporte.id]
+          ),
+          pool.query(
+            `SELECT 
+               tipo, 
+               COUNT(*) as count
+             FROM reacciones
+             WHERE reporte_id = $1
+             GROUP BY tipo`,
+            [reporte.id]
+          ),
+          pool.query(
+            `SELECT tipo
+             FROM reacciones
+             WHERE reporte_id = $1 AND usuario_id = $2`,
+            [reporte.id, userId]
+          )
+        ]);
+
+        // Formatear reacciones totales
+        const reacciones = {
+          confirm: 0,
+          deny: 0,
+          care: 0,
+          emergency: 0
+        };
+        reaccionesTotales.rows.forEach(({ tipo, count }) => {
+          reacciones[tipo] = parseInt(count, 10);
+        });
+
+        // Formatear reacciones del usuario
+        const userReactions = reaccionesUsuario.rows.map(row => row.tipo);
+
+        return {
+          ...reporte,
+          archivos: archivos.rows,
+          comentarios: comentarios.rows,
+          reacciones,
+          userReactions // Lista de tipos de reacciones del usuario
+        };
+      })
+    );
+
+    res.json(reportesCompletos);
   } catch (err) {
     console.error('Error al obtener reportes:', err);
-    res.status(500).json({ error: 'Error al obtener reportes' });
+    res.status(500).json({ 
+      error: 'Error al obtener reportes',
+      detalle: err.message
+    });
   }
 };
-
-
 
 const createComentario = async (req, res) => {
   const { id: reporte_id } = req.params;

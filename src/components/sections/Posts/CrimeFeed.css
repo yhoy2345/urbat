@@ -1,0 +1,164 @@
+/* CrimeFeed.css */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+.crime-feed {
+  font-family: 'Montserrat', sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(15, 23, 42, 0.85);
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.feed-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.feed-header h2 {
+  font-weight: 700;
+  font-size: 2rem;
+  margin: 0;
+  color: #FFD700;
+  animation: glowPulse 3s infinite;
+}
+
+.mode-toggle {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: 0.3s ease;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mode-toggle:hover {
+  background: #2f99eb;
+  transform: translateY(-2px);
+}
+
+/* Modos de visualización */
+.feed-container {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.posts-list {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.map-sidebar {
+  flex: 1;
+  position: sticky;
+  top: 1rem;
+  height: fit-content;
+}
+
+/* Estilos para el modo Reel */
+.reel-mode .reel-container {
+  height: 80vh;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: rgba(10, 10, 20, 0.8);
+}
+
+/* Loading y estados de error */
+.loading {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
+  animation: pulse 1.5s infinite;
+}
+
+.error {
+  background: rgba(231, 76, 60, 0.2);
+  border: 1px solid rgba(231, 76, 60, 0.5);
+  padding: 1rem;
+  border-radius: 0.75rem;
+  text-align: center;
+  font-weight: 500;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* Animaciones (las mismas que en tu ejemplo) */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    text-shadow: 
+      0 0 10px rgba(255, 215, 0, 0.5),
+      0 0 20px rgba(126, 200, 255, 0.3);
+  }
+  50% {
+    text-shadow: 
+      0 0 20px rgba(255, 215, 0, 0.5),
+      0 0 40px rgba(126, 200, 255, 0.5),
+      0 0 60px rgba(126, 200, 255, 0.2);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; transform: scale(0.95); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+
+.posts-list {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  overflow-y: auto;
+  padding: var(--spacing-md);
+}
+
+.map-sidebar {
+  flex: 1;
+  height: 100%;
+  background: var(--urbat-dark);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .feed-container {
+    flex-direction: column;
+  }
+  
+  .map-sidebar {
+    position: static;
+    order: -1;
+    margin-bottom: 1.5rem;
+  }
+  
+  .reel-mode .reel-container {
+    height: 70vh;
+  }
+}
