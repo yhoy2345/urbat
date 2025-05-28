@@ -5,10 +5,10 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "./CrimeFeed.css";
 import CrimePost from "./CrimePost";
-import CrimeMap from "./CrimeMap"; // Ajusta la ruta según tu proyecto
+import CrimeMap from "./CrimeMap";
 
 const CrimeFeed = () => {
-  const [isReelMode, setIsReelMode] = useState(true); // Inicia en modo TikTok
+  const [isReelMode, setIsReelMode] = useState(true);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -29,15 +29,13 @@ const CrimeFeed = () => {
           },
         });
         if (!response.ok) {
-          const errorData = await response.json().catch(() => errorData({}));
+          const errorData = await response.json();
           if (response.status === 401 || response.status === 403) {
             localStorage.removeItem("token");
             window.location.href = '/login';
             throw new Error("Sesión expirada. Por favor inicia sesión de nuevo.");
           }
-          throw new Error(
-            errorData.message || `Error ${response.status}: ${response.statusText}`
-          );
+          throw new Error(errorData.error || `Error ${response.status}`);
         }
         const data = await response.json();
         if (!Array.isArray(data)) {
@@ -69,28 +67,28 @@ const CrimeFeed = () => {
       media:
         reporte.archivos && reporte.archivos.length > 0
           ? {
-            type: reporte.archivos[0].tipo,
-            url: `http://localhost:5000${reporte.archivos[0].url}`,
-            urls: reporte.archivos.map((a) => `http://localhost:5000${a.url}`),
-          }
+              type: reporte.archivos[0].tipo,
+              url: `http://localhost:5000${reporte.archivos[0].url}`,
+              urls: reporte.archivos.map((a) => `http://localhost:5000${a.url}`),
+            }
           : null,
       text: `${reporte.descripcion}${reporte.referencia ? ` Referencia: ${reporte.referencia}` : ""}`,
-      reactions: reporte.reacciones || {
+      reacciones: reporte.reacciones || {
         confirm: 0,
         deny: 0,
         care: 0,
         emergency: 0,
       },
-      comments: reporte.comentarios || [],
+      userReactions: reporte.userReactions || [],
+      comentarios: reporte.comentarios || [],
       tags: [`#${reporte.tipo_alerta}`],
       coordinates: {
         lat: parseFloat(reporte.latitud) && reporte.latitud >= -90 && reporte.latitud <= 90
           ? parseFloat(reporte.latitud)
-          : -34.6037, // Fallback: Buenos Aires
-        lng:
-          parseFloat(reporte.longitud) && reporte.longitud >= -180 && reporte.longitud <= 180
-            ? parseFloat(reporte.longitud)
-            : -58.3816,
+          : -34.6037,
+        lng: parseFloat(reporte.longitud) && reporte.longitud >= -180 && reporte.longitud <= 180
+          ? parseFloat(reporte.longitud)
+          : -58.3816,
       },
     }));
   };
@@ -107,10 +105,10 @@ const CrimeFeed = () => {
     if (diff < hour) return `Hace ${Math.floor(diff / minute)} minutos`;
     if (diff < day) return `Hace ${Math.floor(diff / hour)} horas`;
     return `Hace ${Math.floor(diff / day)} días`;
-};
+  };
 
   if (loading) return <div className="loading">Cargando reportes...</div>;
-  if (error) return <div className="error-message">Error: ${error}</div>;
+  if (error) return <div className="error-message">Error: {error}</div>;
 
   return (
     <div className={`crime-feed ${isReelMode ? "reel-mode" : ""}`}>

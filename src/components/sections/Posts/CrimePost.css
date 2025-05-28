@@ -39,27 +39,30 @@
   overflow: hidden;
   position: relative;
   animation: fadeInUp 0.5s ease-out;
+  width: 100%;
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
 }
 
 .crime-post.list-mode {
-  padding: var(--spacing-md);
+  padding: var(--spacing-sm);
+  display: flex;
+  flex-direction: column;
 }
 
 .crime-post.reel-mode {
   width: 100%;
-  height: 100vh;
   max-width: 600px;
+  height: 100vh;
   margin: 0 auto;
   background: var(--urbat-dark);
   border: none;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 
+/* Border styles for different post types */
 .crime-post.danger { border-left: 4px solid rgba(231, 76, 60, 0.8); }
 .crime-post.warning { border-left: 4px solid rgba(241, 196, 15, 0.8); }
 .crime-post.info { border-left: 4px solid rgba(52, 152, 219, 0.8); }
@@ -114,22 +117,24 @@
 
 .more-button:hover { color: var(--urbat-gold); }
 
-/* Cuerpo del post (dos columnas en modo lista) */
+/* Cuerpo del post */
 .post-body {
   display: flex;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
 }
 
 .list-mode .post-body {
   flex-direction: row;
+  flex-wrap: nowrap;
 }
 
 .reel-mode .post-body {
   flex-direction: column;
   flex: 1;
+  position: relative;
 }
 
-/* Columna principal (multimedia, mapa, texto, reacciones) */
+/* Columna principal */
 .post-main {
   flex: 2;
   display: flex;
@@ -137,18 +142,23 @@
   gap: var(--spacing-sm);
 }
 
-.reel-mode .post-main {
-  flex: 1;
+.list-mode .post-main {
+  width: 100%;
 }
 
 /* Contenido multimedia */
 .media-container {
   position: relative;
   width: 100%;
-  aspect-ratio: 9 / 16;
+  aspect-ratio: 16 / 9;
   background-color: #000;
   border-radius: var(--radius-lg);
   overflow: hidden;
+}
+
+.reel-mode .media-container {
+  aspect-ratio: 9 / 16;
+  height: 100%;
 }
 
 .video-wrapper {
@@ -172,13 +182,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.5);
   cursor: pointer;
 }
 
 .play-icon {
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
 }
 
 .video-controls {
@@ -186,12 +196,12 @@
   bottom: 10px;
   right: 10px;
   display: flex;
-  gap: 10px;
+  gap: 8px;
   z-index: 10;
 }
 
 .control-button {
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   border: none;
   color: white;
   border-radius: 50%;
@@ -237,6 +247,16 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
+.reel-mode .post-map {
+  position: absolute;
+  top: 80px;
+  right: var(--spacing-sm);
+  width: 120px;
+  height: 80px;
+  z-index: 10;
+  border: 1px solid var(--urbat-border);
+}
+
 .no-map {
   padding: var(--spacing-sm);
   text-align: center;
@@ -250,11 +270,22 @@
   padding: var(--spacing-sm) 0;
 }
 
+.reel-mode .post-content {
+  position: absolute;
+  bottom: 120px;
+  left: var(--spacing-md);
+  right: var(--spacing-md);
+  background: rgba(0, 0, 0, 0.7);
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-lg);
+  z-index: 10;
+}
+
 .post-text {
   margin: 0;
   color: var(--urbat-white);
   line-height: 1.4;
-  font-size: 1rem;
+  font-size: 0.95rem;
 }
 
 .hashtag {
@@ -271,6 +302,19 @@
   border-bottom: 1px solid var(--urbat-border);
 }
 
+.reel-mode .reactions-bar {
+  position: absolute;
+  right: var(--spacing-sm);
+  top: 50%;
+  transform: translateY(-50%);
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  background: rgba(0, 0, 0, 0.6);
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-lg);
+  z-index: 10;
+}
+
 .reaction-button {
   background: none;
   border: none;
@@ -283,11 +327,24 @@
   transition: var(--transition-fast);
 }
 
+.reel-mode .reaction-button {
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  justify-content: center;
+}
+
 .reaction-button span { font-size: 0.8rem; }
 
 .reaction-button.active { color: var(--urbat-gold); }
 .reaction-button.active.emergency { color: #e74c3c; }
 .reaction-button:hover { color: var(--urbat-sky); }
+
+.reaction-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
 /* Columna de comentarios (modo lista) */
 .comments-sidebar {
@@ -296,7 +353,7 @@
   flex-direction: column;
   background: var(--urbat-glass);
   border-radius: var(--radius-lg);
-  padding: var(--spacing-md);
+  padding: var(--spacing-sm);
   max-height: 600px;
 }
 
@@ -401,72 +458,28 @@
   color: var(--urbat-dark);
 }
 
+.send-comment:disabled,
+.comment-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Comentarios en modo TikTok */
 .reel-mode .comments-section {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(to top, var(--urbat-dark), transparent);
-  max-height: 50%;
-  padding: var(--spacing-md);
-  padding-bottom: var(--spacing-lg);
-}
-
-.reel-mode .reactions-bar {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  flex-direction: column;
-  background: none;
-  border: none;
-  padding: 0;
-}
-
-.reel-mode .reaction-button {
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  justify-content: center;
-  margin-bottom: var(--spacing-sm);
-}
-
-.reel-mode .post-content {
-  position: absolute;
-  bottom: 100px;
-  left: var(--spacing-md);
-  right: var(--spacing-md);
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--urbat-dark);
+  max-height: 40%;
   padding: var(--spacing-sm);
-  border-radius: var(--radius-lg);
-}
-
-.reel-mode .post-map {
-  position: absolute;
-  top: 80px;
-  right: var(--spacing-md);
-  width: 150px;
-  height: 100px;
+  border-top: 1px solid var(--urbat-border);
   z-index: 10;
+  overflow-y: auto;
 }
 
-
-.reaction-button.active {
-  color: var(--urbat-gold);
-  transform: scale(1.1);
-}
-
-.reaction-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.comment-input:disabled,
-.send-comment:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.reel-mode .comments-section.expanded {
+  max-height: 60%;
 }
 
 /* Responsive */
@@ -475,16 +488,26 @@
     flex-direction: column;
   }
 
+  .list-mode .post-main,
+  .list-mode .comments-sidebar {
+    width: 100%;
+  }
+
   .comments-sidebar {
     max-height: 300px;
-    margin-top: var(--spacing-md);
+    margin-top: var(--spacing-sm);
   }
 
   .media-container {
     aspect-ratio: 16 / 9;
   }
 
+  .reel-mode .post-map {
+    width: 100px;
+    height: 70px;
+  }
+
   .crime-post.list-mode {
-    max-width: 600px;
+    padding: var(--spacing-sm);
   }
 }

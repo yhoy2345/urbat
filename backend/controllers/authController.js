@@ -84,16 +84,27 @@ const getProfile = async (req, res) => {
 };
 
 const authenticateToken = (req, res, next) => {
-  const token = req.headers['authorization']?.split(' ')[1];
-  
+  const authHeader = req.headers['authorization'];
+  console.log('Authorization header:', authHeader); // Debug
+  const token = authHeader && authHeader.split(' ')[1];
+
   if (!token) {
+    console.log('No token provided');
     return res.status(401).json({ error: 'Token no proporcionado' });
   }
 
   jwt.verify(token, 'tu_secreto_jwt', (err, decoded) => {
     if (err) {
-      return res.status(403).json({ error: 'Token inválido' });
+      console.error('JWT verification error:', err.message); // Debug
+      return res.status(403).json({ error: 'Token inválido', detalle: err.message });
     }
+
+    console.log('Decoded JWT:', decoded); // Debug
+    if (!decoded.userId) {
+      console.log('No userId in decoded token');
+      return res.status(403).json({ error: 'Token no contiene userId' });
+    }
+
     req.userId = decoded.userId;
     next();
   });
@@ -277,10 +288,18 @@ const getReportes = async (req, res) => {
 
 const createComentario = async (req, res) => {
   const { id: reporte_id } = req.params;
-  const usuario_id = req.user.id; // del token
+  const usuario_id = req.userId;
   const { texto } = req.body;
 
+  console.log('Creating comment:', { reporte_id, usuario_id, texto }); // Debug
+
+  if (!usuario_id) {
+    console.log('No userId provided');
+    return res.status(401).json({ error: 'Usuario no autenticado' });
+  }
+
   if (!texto) {
+    console.log('Empty comment text');
     return res.status(400).json({ error: 'El comentario no puede estar vacío' });
   }
 
@@ -292,19 +311,28 @@ const createComentario = async (req, res) => {
       [reporte_id, usuario_id, texto]
     );
 
+    const userResult = await pool.query(
+      'SELECT nombre FROM usuarios WHERE id = $1',
+      [usuario_id]
+    );
+
     res.status(201).json({
       mensaje: 'Comentario creado con éxito',
-      comentario: result.rows[0],
+      comentario: {
+        ...result.rows[0],
+        usuario_id,
+        usuario_nombre: userResult.rows[0]?.nombre || 'Usuario desconocido'
+      }
     });
   } catch (err) {
     console.error('Error al crear comentario:', err);
-    res.status(500).json({ error: 'Error al crear comentario' });
+    res.status(500).json({ error: 'Error al crear comentario', detalle: err.message });
   }
 };
 
 const crearReaccion = async (req, res) => {
   const { id: reporte_id } = req.params;
-  const usuario_id = req.user.id;
+  const usuario_id = req.userId; // ✅ Correcto
   const { tipo } = req.body;
 
   const tiposValidos = ['confirm', 'deny', 'care', 'emergency'];
@@ -333,7 +361,7 @@ const crearReaccion = async (req, res) => {
     });
   } catch (err) {
     console.error('Error al registrar reacción:', err);
-    res.status(500).json({ error: 'Error al registrar reacción' });
+    res.status(500).json({ error: 'Error al registrar reacción', detalle: err.message });
   }
 };
 

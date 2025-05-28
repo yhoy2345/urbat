@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
@@ -8,6 +8,7 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "leaflet/dist/leaflet.css";
 import "./CrimePost.css";
+import { AuthContext } from "../../../context/AuthContext";
 
 // Corrige los íconos predeterminados de Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -18,72 +19,99 @@ L.Icon.Default.mergeOptions({
 });
 
 const CrimePost = ({ post, isReelMode = false }) => {
-  const [isPlaying, setIsPlaying] = useState(isReelMode); // Inicia en play para modo reel
+  const { user, token } = useContext(AuthContext);
+  const [isPlaying, setIsPlaying] = useState(isReelMode);
   const [isMuted, setIsMuted] = useState(true);
   const [showComments, setShowComments] = useState(false);
-  const [reactions, setReactions] = useState(post.reactions);
+  const [reacciones, setReacciones] = useState(post.reacciones || {
+    confirm: 0,
+    deny: 0,
+    care: 0,
+    emergency: 0
+  });
+  const [userReactions, setUserReactions] = useState(post.userReactions || []);
   const [newComment, setNewComment] = useState("");
-  const [comments, setComments] = useState(post.comments);
+  const [comentarios, setComentarios] = useState(post.comentarios || []);
   const videoRef = useRef(null);
 
   const handleReaction = async (type) => {
+    if (!token) {
+      alert("Por favor inicia sesión para reaccionar");
+      return;
+    }
+
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        `http://localhost:5000/api/reportes/${post.id}/reacciones`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ tipo: type }),
-        }
-      );
+      const response = await fetch(`http://localhost:5000/api/reportes/${post.id}/reacciones`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ tipo: type }),
+      });
 
       if (!response.ok) {
         throw new Error("Error al registrar reacción");
       }
 
       const data = await response.json();
-      setReactions((prev) => ({
-        ...prev,
-        [type]: data.reaccion ? prev[type] + 1 : Math.max(0, prev[type] - 1),
-      }));
-    } catch (err) {
-      console.error("Error:", err);
-    }
-  };
-
-  const handleCommentSubmit = async (e) => {
-    e.preventDefault();
-    if (!newComment.trim()) return;
-
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        `http://localhost:5000/api/reportes/${post.id}/comentarios`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ texto: newComment }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Error al enviar comentario");
+      if (data.reaccion) {
+        setReacciones((prev) => ({
+          ...prev,
+          [type]: prev[type] + 1
+        }));
+        setUserReactions((prev) => [...prev, type]);
       }
-
-      const data = await response.json();
-      setComments((prev) => [data.comentario, ...prev]);
-      setNewComment("");
     } catch (err) {
       console.error("Error:", err);
+      alert("Error al registrar reacción");
     }
   };
+
+const handleCommentSubmit = async (e) => {
+  e.preventDefault();
+  if (!token) {
+    alert("Por favor inicia sesión para comentar");
+    return;
+  }
+  if (!newComment.trim()) return;
+
+  console.log('Enviando comentario con token:', token); // Debug
+
+  try {
+    const response = await fetch(`http://localhost:5000/api/reportes/${post.id}/comentarios`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ texto: newComment }),
+    });
+
+    const data = await response.json();
+    console.log('Comment response:', data); // Debug
+
+    if (!response.ok) {
+      throw new Error(data.error || `Error ${response.status}: ${data.detalle || 'Desconocido'}`);
+    }
+
+    if (!data.comentario) {
+      throw new Error('Respuesta del servidor no contiene comentario');
+    }
+
+    setComentarios((prev) => [{
+      id: data.comentario.id,
+      usuario_id: data.comentario.usuario_id,
+      usuario_nombre: data.comentario.usuario_nombre,
+      texto: data.comentario.texto,
+      creado_en: data.comentario.creado_en
+    }, ...prev]);
+    setNewComment("");
+  } catch (err) {
+    console.error("Error al enviar comentario:", err);
+    alert(`Error al enviar comentario: ${err.message}`);
+  }
+};
 
   const togglePlay = () => {
     if (videoRef.current) {
@@ -99,7 +127,6 @@ const CrimePost = ({ post, isReelMode = false }) => {
     }
   };
 
-  // Pausar/reproducir video según visibilidad
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -128,7 +155,6 @@ const CrimePost = ({ post, isReelMode = false }) => {
     };
   }, [isPlaying, isReelMode]);
 
-  // Validar coordenadas
   const hasValidCoordinates =
     post.coordinates &&
     post.coordinates.lat &&
@@ -163,9 +189,7 @@ const CrimePost = ({ post, isReelMode = false }) => {
       </div>
 
       <div className="post-body">
-        {/* Columna izquierda: Multimedia, Mapa, Texto, Reacciones */}
         <div className="post-main">
-          {/* Contenido multimedia */}
           {post.media ? (
             <div className="media-container">
               {post.media.type === "video" ? (
@@ -193,7 +217,7 @@ const CrimePost = ({ post, isReelMode = false }) => {
                       onClick={() => setShowComments(!showComments)}
                       className="control-button"
                     >
-                      💬 {comments.length}
+                      💬 {comentarios.length}
                     </button>
                   </div>
                 </div>
@@ -218,7 +242,6 @@ const CrimePost = ({ post, isReelMode = false }) => {
             </div>
           )}
 
-          {/* Mapa */}
           {hasValidCoordinates ? (
             <div className="post-map">
               <MapContainer
@@ -242,7 +265,6 @@ const CrimePost = ({ post, isReelMode = false }) => {
             </div>
           )}
 
-          {/* Texto */}
           <div className="post-content">
             <p className="post-text">
               {post.text.split(" ").map((word, i) =>
@@ -255,45 +277,33 @@ const CrimePost = ({ post, isReelMode = false }) => {
             </p>
           </div>
 
-          {/* Reacciones */}
           <div className="reactions-bar">
-            <button
-              onClick={() => handleReaction("confirm")}
-              className={`reaction-button ${reactions.confirm > 0 ? "active" : ""}`}
-            >
-              👍 <span>{reactions.confirm}</span>
-            </button>
-            <button
-              onClick={() => handleReaction("deny")}
-              className={`reaction-button ${reactions.deny > 0 ? "active" : ""}`}
-            >
-              👎 <span>{reactions.deny}</span>
-            </button>
-            <button
-              onClick={() => handleReaction("care")}
-              className={`reaction-button ${reactions.care > 0 ? "active" : ""}`}
-            >
-              ❤️ <span>{reactions.care}</span>
-            </button>
-            <button
-              onClick={() => handleReaction("emergency")}
-              className={`reaction-button ${
-                reactions.emergency > 0 ? "active emergency" : ""
-              }`}
-            >
-              ⛑️ <span>{reactions.emergency}</span>
-            </button>
+            {['confirm', 'deny', 'care', 'emergency'].map((type) => (
+              <button
+                key={type}
+                onClick={() => handleReaction(type)}
+                className={`reaction-button ${
+                  userReactions.includes(type) ? "active" : ""
+                } ${type === 'emergency' && userReactions.includes(type) ? "emergency" : ""}`}
+                disabled={!token}
+              >
+                {type === 'confirm' && '👍'}
+                {type === 'deny' && '👎'}
+                {type === 'care' && '❤️'}
+                {type === 'emergency' && '⛑️'}
+                <span>{reacciones[type]}</span>
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Columna derecha: Comentarios */}
         {!isReelMode && (
           <div className="comments-sidebar">
             <div className={`comments-section ${showComments ? "expanded" : ""}`}>
-              {comments.length === 0 ? (
+              {comentarios.length === 0 ? (
                 <p className="no-comments">No hay comentarios aún</p>
               ) : (
-                comments
+                comentarios
                   .slice(0, showComments ? undefined : 5)
                   .map((comment) => (
                     <div key={comment.id} className="comment">
@@ -313,12 +323,12 @@ const CrimePost = ({ post, isReelMode = false }) => {
                   ))
               )}
 
-              {comments.length > 5 && !showComments && (
+              {comentarios.length > 5 && !showComments && (
                 <button
                   onClick={() => setShowComments(true)}
                   className="view-comments"
                 >
-                  Ver todos los comentarios ({comments.length})
+                  Ver todos los comentarios ({comentarios.length})
                 </button>
               )}
             </div>
@@ -330,8 +340,9 @@ const CrimePost = ({ post, isReelMode = false }) => {
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder="Añade un comentario..."
                 className="comment-input"
+                disabled={!token}
               />
-              <button type="submit" className="send-comment">
+              <button type="submit" className="send-comment" disabled={!token}>
                 Enviar
               </button>
             </form>
@@ -339,13 +350,12 @@ const CrimePost = ({ post, isReelMode = false }) => {
         )}
       </div>
 
-      {/* Comentarios en modo TikTok (debajo) */}
       {isReelMode && (
         <div className={`comments-section ${showComments ? "expanded" : ""}`}>
-          {comments.length === 0 ? (
+          {comentarios.length === 0 ? (
             <p className="no-comments">No hay comentarios aún</p>
           ) : (
-            comments
+            comentarios
               .slice(0, showComments ? undefined : 2)
               .map((comment) => (
                 <div key={comment.id} className="comment">
@@ -365,12 +375,12 @@ const CrimePost = ({ post, isReelMode = false }) => {
               ))
           )}
 
-          {comments.length > 2 && !showComments && (
+          {comentarios.length > 2 && !showComments && (
             <button
               onClick={() => setShowComments(true)}
               className="view-comments"
             >
-              Ver todos los comentarios ({comments.length})
+              Ver todos los comentarios ({comentarios.length})
             </button>
           )}
 
@@ -381,8 +391,9 @@ const CrimePost = ({ post, isReelMode = false }) => {
               onChange={(e) => setNewComment(e.target.value)}
               placeholder="Añade un comentario..."
               className="comment-input"
+              disabled={!token}
             />
-            <button type="submit" className="send-comment">
+            <button type="submit" className="send-comment" disabled={!token}>
               Enviar
             </button>
           </form>

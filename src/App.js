@@ -1,6 +1,7 @@
   import React from 'react';
   import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
   import MainLayout from './layouts/MainLayout';
+  import { AuthProvider } from './context/AuthContext'; // Importa AuthProvider
   import Inicio from './components/sections/Inicio/Inicio';
   import Login from './auth/Login';
   import Register from './auth/Register';
@@ -17,9 +18,9 @@
   import 'leaflet/dist/leaflet.css';
   import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css';
   import 'leaflet-defaulticon-compatibility';
-
-  export default function App() {
-    return (
+export default function App() {
+  return (
+    <AuthProvider>
       <Router>
         <Routes>
           {/* Rutas públicas (sin layout) */}
@@ -28,7 +29,7 @@
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/verify-code" element={<VerifyCode />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-          
+
           {/* Rutas protegidas (con layout MainLayout) */}
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Inicio />} />
@@ -39,12 +40,11 @@
             <Route path="posts" element={<CrimeFeed />} />
             <Route path="nosotros" element={<AboutUs />} />
 
-            
-            
-            {/* Ruta para manejar páginas no encontradas (opcional) */}
+            {/* Ruta para páginas no encontradas */}
             <Route path="*" element={<div>Página no encontrada</div>} />
           </Route>
         </Routes>
       </Router>
-    );
+    </AuthProvider>
+  );
   }
