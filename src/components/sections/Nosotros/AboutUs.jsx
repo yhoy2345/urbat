@@ -1,190 +1,176 @@
-import React from "react";
-import TeamMember from "./TeamMember.jsx";
+import { motion } from 'framer-motion';
+import MapComponent from '../../Map/MapComponent';
+import './AboutUs.css';
+import 'leaflet/dist/leaflet.css';
 
-function AboutUs() {
-    const teamMembers = [
-        {
-            id: 1,
-            name: "Yhoy Clemente",
-            role: "Desarrollador",
-            bio: "Ex-agente de seguridad con 10+ anos protegiendo comunidades.",
-            img: "/team/alex.jpg",
-        },
-        {
-            id: 2,
-            name: "Lucas Leo",
-            role: "Desarrollador ",
-            bio: "Especialista en geolocalizacion y mapas interactivos.",
-            img: "/team/marta.jpg",
-        },
-        {
-            id: 3,
-            name: "Leonel Flores",
-            role: "Desarrollador",
-            bio: "Conector entre usuarios y autoridades locales.",
-            img: "/team/carlos.jpg",
-        },
-    ];
-
-    return (
-        <section className="about-section" style={styles.section}>
-            {/* Hero */}
-            <div style={styles.hero}>
-                <h1 style={{ ...styles.title, animation: "titleEntrance 1s ease-out" }}>
-                    Seguridad <span style={styles.highlight}>Colaborativa</span>
-                </h1>
-                <p style={styles.subtitle}>
-                    Creemos que la protección comienza con <strong>conexión</strong> y{" "}
-                    <strong>tecnología</strong>.
-                </p>
-            </div>
-
-            {/* Misión/Visión */}
-            <div style={styles.missionGrid}>
-                <div style={styles.card}>
-                    <h3 style={styles.cardTitle}>Misión</h3>
-                    <p style={styles.cardText}>
-                        Empoderar a las comunidades para reducir el crimen mediante reportes
-                        en tiempo real y datos verificados.
-                    </p>
-                </div>
-
-                <div style={styles.card}>
-                    <h3 style={styles.cardTitle}>Visión</h3>
-                    <p style={styles.cardText}>
-                        Ser la red de seguridad vecinal más confiable de Latinoamérica para
-                        2025.
-                    </p>
-                </div>
-            </div>
-
-            {/* Equipo */}
-            <div style={styles.teamSection}>
-                <h2 style={styles.sectionTitle}>Conoce al Equipo</h2>
-                <div style={styles.teamGrid}>
-                    {teamMembers.map((member) => (
-                        <TeamMember
-                            key={member.id}
-                            member={member} />
-                    ))}
-                </div>
-            </div>
-
-            {/* Stats */}
-            <div style={styles.statsContainer}>
-                <div style={styles.statItem}>
-                    <span style={styles.statNumber}>10K+</span>
-                    <span style={styles.statLabel}>Usuarios Activos</span>
-                </div>
-                <div style={styles.statItem}>
-                    <span style={styles.statNumber}>92%</span>
-                    <span style={styles.statLabel}>Reportes Verificados</span>
-                </div>
-                <div style={styles.statItem}>
-                    <span style={styles.statNumber}>24/7</span>
-                    <span style={styles.statLabel}>Monitoreo</span>
-                </div>
-            </div>
-        </section>
-    );
-}
-
-// Estilos en JS (usa tu sistema de diseño de :root)
-const styles = {
-  section: {
-    padding: "var(--spacing-lg)",
-    background: "var(--urbat-dark)",
-    color: "var(--urbat-white)",
-  },
-  hero: {
-    textAlign: "center",
-    marginBottom: "var(--spacing-lg)",
-  },
-  title: {
-    fontSize: "3rem",
-    marginBottom: "var(--spacing-sm)",
-    background: "linear-gradient(to right, var(--urbat-gold), var(--urbat-sky))",
-    WebkitBackgroundClip: "text",
-    color: "transparent",
-  },
-  highlight: {
-    textShadow: "0 0 10px var(--urbat-glow)",
-  },
-  subtitle: {
-    fontSize: "1.2rem",
-    opacity: 0.9,
-    maxWidth: "800px",
-    margin: "0 auto",
-  },
-  missionGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-    gap: "var(--spacing-md)",
-    margin: "var(--spacing-lg) 0",
-  },
-  card: {
-    background: "var(--urbat-glass)",
-    padding: "var(--spacing-md)",
-    borderRadius: "var(--radius-lg)",
-    border: "1px solid var(--urbat-border)",
-    transition: "var(--transition-fast)",
-    ":hover": {
-      transform: "translateY(-5px)",
-      boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)",
+const AboutUsSection = () => {
+  const features = [
+    {
+      icon: '🚨',
+      title: 'Empoderamiento ciudadano',
+      description: 'Todos pueden ser parte de la solución'
     },
-  },
-  cardTitle: {
-    color: "var(--urbat-gold)",
-    marginBottom: "var(--spacing-xs)",
-  },
-  cardText: {
-    lineHeight: 1.6,
-  },
-  teamSection: {
-    margin: "var(--spacing-lg) 0",
-  },
-  sectionTitle: {
-    textAlign: "center",
-    marginBottom: "var(--spacing-md)",
-    position: "relative",
-    ":after": {
-      content: '""',
-      display: "block",
-      width: "100px",
-      height: "3px",
-      background: "var(--urbat-gold)",
-      margin: "var(--spacing-xs) auto",
+    {
+      icon: '⏱️',
+      title: 'Tiempo real',
+      description: 'La información llega cuando importa'
     },
-  },
-  teamGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-    gap: "var(--spacing-md)",
-  },
-  statsContainer: {
-    display: "flex",
-    justifyContent: "space-around",
-    flexWrap: "wrap",
-    marginTop: "var(--spacing-lg)",
-    background: "var(--urbat-glass)",
-    padding: "var(--spacing-md)",
-    borderRadius: "var(--radius-lg)",
-  },
-  statItem: {
-    textAlign: "center",
-    padding: "var(--spacing-sm)",
-  },
-  statNumber: {
-    display: "block",
-    fontSize: "2.5rem",
-    fontWeight: 700,
-    color: "var(--urbat-gold)",
-    animation: "pulse 2s infinite",
-  },
-  statLabel: {
-    fontSize: "0.9rem",
-    opacity: 0.8,
-  },
+    {
+      icon: '🤝',
+      title: 'Confiabilidad comunitaria',
+      description: 'Validación entre pares'
+    },
+    {
+      icon: '🗺️',
+      title: 'Mapeo inteligente',
+      description: 'Tendencias delictivas visibles con un clic'
+    }
+  ];
+
+  return (
+    <section className="about-us-section">
+      {/* Hero Section */}
+      <div className="hero-container">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="hero-content"
+        >
+          <h1>Más que una app. Somos Urbat.</h1>
+          <p className="hero-subtitle">Tecnología barrial en tiempo real. Seguridad construida por la comunidad.</p>
+          <div className="hero-scroll-indicator">
+            <span></span>
+          </div>
+        </motion.div>
+        <div className="hero-background"></div>
+      </div>
+
+      {/* What is Urbat */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        className="content-section what-is-section"
+      >
+        <div className="section-header">
+          <span className="section-icon">🌐</span>
+          <h2>¿Qué hacemos?</h2>
+        </div>
+        <div className="section-content">
+          <p>
+            Urbat es una plataforma web de alerta comunitaria que permite a cualquier ciudadano reportar, visualizar y validar incidentes delictivos en tiempo real. Nuestro enfoque es descentralizar la seguridad urbana y poner el poder de la información en manos de las personas.
+          </p>
+          <p>
+            A través de tecnología geolocalizada, notificaciones instantáneas y validación comunitaria, buscamos crear una red inteligente que proteja al barrio desde adentro.
+          </p>
+          <div className="animated-icons">
+            <div className="icon-item">
+              <div className="icon-circle">🧠</div>
+              <span>Comunidad</span>
+            </div>
+            <div className="icon-item">
+              <div className="icon-circle">📍</div>
+              <span>Mapa</span>
+            </div>
+            <div className="icon-item">
+              <div className="icon-circle">📢</div>
+              <span>Alerta</span>
+            </div>
+            <div className="icon-item">
+              <div className="icon-circle">🔒</div>
+              <span>Seguridad</span>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Origin Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.4 }}
+        className="content-section origin-section"
+      >
+        <div className="section-header">
+          <span className="section-icon">🧬</span>
+          <h2>Nuestro origen</h2>
+        </div>
+        <div className="section-content">
+          <p>
+            Urbat surgió como respuesta a una pregunta sencilla: ¿y si pudiéramos anticiparnos al peligro? En un contexto donde los canales oficiales son lentos o inexistentes, decidimos crear una herramienta digital hecha por y para la comunidad.
+          </p>
+          <p>
+            Empezamos con un prototipo durante noches de código, escuchando historias reales de vecinos, y comprendiendo que la mejor defensa no siempre es una patrulla, sino una red conectada.
+          </p>
+          <div className="before-after">
+            <div className="before">
+              <h4>Antes</h4>
+              <ul>
+                <li>Información fragmentada</li>
+                <li>Respuestas lentas</li>
+                <li>Sensación de vulnerabilidad</li>
+              </ul>
+            </div>
+            <div className="arrow">→</div>
+            <div className="after">
+              <h4>Con Urbat</h4>
+              <ul>
+                <li>Red comunitaria activa</li>
+                <li>Alertas en tiempo real</li>
+                <li>Empoderamiento colectivo</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Why Urbat Matters */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.6 }}
+        className="content-section why-matters-section"
+      >
+        <div className="section-header">
+          <span className="section-icon">💡</span>
+          <h2>¿Por qué existimos?</h2>
+        </div>
+        <div className="features-grid">
+          {features.map((feature, index) => (
+            <motion.div
+              key={index}
+              whileHover={{ y: -5 }}
+              className="feature-card"
+            >
+              <div className="feature-icon">{feature.icon}</div>
+              <h3>{feature.title}</h3>
+              <p>{feature.description}</p>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* Map Section */}
+
+      <MapComponent />
+
+
+      {/* CTA Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 1.0 }}
+        className="cta-section"
+      >
+        <h3>"Cuando el barrio se conecta, el miedo se desconecta."</h3>
+        <div className="cta-buttons">
+          <button className="primary-button">Explora los reportes en tu zona</button>
+          <button className="secondary-button">Únete a la red Urbat</button>
+        </div>
+      </motion.div>
+    </section>
+  );
 };
 
-export default AboutUs;
+export default AboutUsSection;

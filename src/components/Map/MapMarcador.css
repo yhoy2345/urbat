@@ -1,0 +1,143 @@
+/* Estilo base del marcador */
+.black-pulse-marker-icon {
+    background: transparent;
+    border: none;
+}
+
+/* Contenedor principal */
+.pulse-container {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Ondas de pulsación */
+.pulse-wave {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle, 
+        rgba(0, 0, 0, 0.8) 0%, 
+        rgba(0, 0, 0, 0.4) 50%,
+        rgba(0, 0, 0, 0) 100%
+    );
+    transform: scale(0);
+    opacity: 0;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.pulse-wave-1 {
+    width: 120px;
+    height: 120px;
+    animation: black-pulse 4s infinite linear;
+}
+
+.pulse-wave-2 {
+    width: 120px;
+    height: 120px;
+    animation: black-pulse 4s infinite 1.33s linear;
+}
+
+.pulse-wave-3 {
+    width: 120px;
+    height: 120px;
+    animation: black-pulse 4s infinite 2.66s linear;
+}
+
+/* Núcleo central */
+.pulse-core {
+  position: relative;
+  width: 10px; /* Más delgado */
+  height: 10px; /* Más delgado */
+  border-radius: 50%;
+  background: rgba(15, 88, 206, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 30;
+  box-shadow: 
+    0 0 12px rgba(172, 172, 172, 0.7),
+    inset 0 0 8px rgba(255, 255, 255, 0.08);
+  border: 2px solid rgb(255, 255, 255);
+}
+
+/* Brillo interno del núcleo */
+.core-inner-glow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle, 
+    rgba(150, 150, 150, 0.25) 0%, 
+    transparent 70%
+  );
+  animation: inner-glow-pulse 3s infinite alternate;
+}
+
+/* Imagen del marcador */
+.pulse-marker-img {
+  width: 400%; /* Más grande dentro del núcleo más delgado */
+  height: 480%;
+  border-radius: 100%; /* Totalmente redondo */
+  object-fit: cover;
+  z-index: 40;
+  filter: 
+    brightness(1.15)
+    contrast(1.1)
+    drop-shadow(0 0 2px rgba(0, 0, 0, 0.7));
+}
+
+
+
+/* Animaciones */
+@keyframes black-pulse {
+    0% {
+        transform: scale(0.6);
+        opacity: 0.8;
+    }
+    70% {
+        opacity: 0.4;
+    }
+    100% {
+        transform: scale(1.4);
+        opacity: 0;
+    }
+}
+
+@keyframes inner-glow-pulse {
+    0% {
+        opacity: 0.3;
+        transform: scale(0.95);
+    }
+    100% {
+        opacity: 0.7;
+        transform: scale(1.05);
+    }
+}
+
+/* Efecto de distorsión sutil en las ondas */
+.pulse-wave::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        transparent 70%
+    );
+    animation: wave-distortion 4s infinite;
+}
+
+@keyframes wave-distortion {
+    0% { transform: scale(1); opacity: 0; }
+    50% { opacity: 0.2; }
+    100% { transform: scale(1.05); opacity: 0; }
+}
