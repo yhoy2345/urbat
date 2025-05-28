@@ -1,6 +1,6 @@
 # Aplicación de Alerta de Crimen 🚨
 
-> **"leo me la lacta"**
+
 
 Una plataforma web de alerta comunitaria que permite a los usuarios informar y visualizar incidentes delictivos en su área en tiempo real. Inspirada en Citizen ([https://citizen.com](https://citizen.com)), esta aplicación busca fortalecer la seguridad vecinal mediante la colaboración activa de todos.
 
@@ -56,10 +56,10 @@ Al compartir información en tiempo real, los usuarios podrán tomar decisiones 
 
 4. **Ejecuta la aplicación**:
 
-   ```bash
    # Levanta el backend
-   python manage.py migrate
-   python manage.py runserver
+
+   cd backend 
+   node index.js
 
    # Levanta el frontend
    npm start
